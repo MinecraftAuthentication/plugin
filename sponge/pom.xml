@@ -15,12 +15,10 @@
 
     <name>MinecraftAuth Plugin - Sponge</name>
 
-    <description>Authenticate players in your Minecraft server to various services</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <url>https://minecraftauth.me</url>
 
     <profiles>
         <profile>
@@ -132,6 +130,10 @@
                     </goals> <!-- install is here to fix javadoc generation in multi-module projects -->
                     <releaseProfiles>release</releaseProfiles>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
