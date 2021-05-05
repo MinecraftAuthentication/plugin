@@ -16,6 +16,7 @@
     <name>MinecraftAuth Plugin - Common</name>
 
     <build>
+        <finalName>MinecraftAuth-Common-${version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
