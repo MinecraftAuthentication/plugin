@@ -1,0 +1,4 @@
+name: Plugin
+version: ${project.version}
+main: me.minecraftauth.plugin.bungee.MinecraftAuthBungee
+description: Authenticate players in your Minecraft server to various services
