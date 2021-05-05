@@ -39,7 +39,6 @@ import java.nio.file.Path;
 @Plugin(
         id = "minecraftauth",
         name = "MinecraftAuth",
-        version = "1.0-SNAPSHOT",
         description = "Authenticate players in your Minecraft server to various services",
         url = "https://minecraftauth.me",
         authors = {
