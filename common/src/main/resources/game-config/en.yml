@@ -1,0 +1,11 @@
+Authentication: token
+
+Subscription:
+  Kick message: "You must be following me on Twitch to join my Minecraft server!"
+  Providers:
+    - Twitch: following
+#    - Twitch
+#    - Patreon
+#    - Discord: 000000000000000000
+#    - YouTube: subscriber
+#    - YouTube

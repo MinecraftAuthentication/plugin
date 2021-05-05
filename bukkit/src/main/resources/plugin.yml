@@ -1,0 +1,7 @@
+name: MinecraftAuth
+version: ${project.version}
+main: me.minecraftauth.plugin.bukkit.MinecraftAuthBukkit
+api-version: 1.15
+authors: [ MinecraftAuth ]
+description: Authenticate players in your Minecraft server to various services
+website: https://minecraftauth.me
