@@ -9,7 +9,7 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <name>MinecraftAuth plugin</name>
+    <name>MinecraftAuth Plugin</name>
     <description>Authenticate players in your Minecraft server to various services</description>
     <url>https://minecraftauth.me</url>
     <inceptionYear>2021</inceptionYear>
