@@ -28,12 +28,12 @@ import me.minecraftauth.plugin.common.feature.subscription.RequireSubscriptionFe
 
 import java.util.Map;
 
-public class DiscordSubscriptionProvider extends AbstractSubscriptionProvider {
+public class DiscordRolePresentProvider extends AbstractSubscriptionProvider {
 
     private final RequireSubscriptionFeature feature;
     private final Dynamic config;
 
-    public DiscordSubscriptionProvider(RequireSubscriptionFeature feature, Dynamic config) {
+    public DiscordRolePresentProvider(RequireSubscriptionFeature feature, Dynamic config) {
         this.feature = feature;
         this.config = config;
     }
@@ -50,8 +50,9 @@ public class DiscordSubscriptionProvider extends AbstractSubscriptionProvider {
 
     @Override
     public boolean isSubscribed(MinecraftAccount account) throws LookupException {
-        if (getRoleId() == null) return false;
-        return AuthService.isSubscribedDiscord(getServerToken(feature, config), account.getUUID(), getRoleId());
+        String roleId = getRoleId();
+        if (roleId == null) return false;
+        return AuthService.isRolePresent(getServerToken(feature, config), account.getUUID(), roleId);
     }
 
 }

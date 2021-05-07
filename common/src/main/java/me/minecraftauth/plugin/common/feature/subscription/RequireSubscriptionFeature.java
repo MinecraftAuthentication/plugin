@@ -66,7 +66,11 @@ public class RequireSubscriptionFeature extends Feature {
 
             if ((providerDynamic.is(String.class) && providerDynamic.asString().equalsIgnoreCase("discord"))
                     || providerDynamic.dget("Discord").isPresent()) {
-                provider = new DiscordSubscriptionProvider(this, providerDynamic);
+                if (providerDynamic.isMap() && providerDynamic.get("Discord").convert().intoString().toLowerCase().startsWith("in")) {
+                    provider = new DiscordMemberPresentProvider(this, providerDynamic);
+                } else {
+                    provider = new DiscordRolePresentProvider(this, providerDynamic);
+                }
             } else if ((providerDynamic.is(String.class) && providerDynamic.asString().equalsIgnoreCase("patreon"))
                     || providerDynamic.dget("Patreon").isPresent()) {
                 provider = new PatreonSubscriptionProvider(this, providerDynamic);
