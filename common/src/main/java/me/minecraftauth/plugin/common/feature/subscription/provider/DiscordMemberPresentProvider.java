@@ -22,7 +22,7 @@ package me.minecraftauth.plugin.common.feature.subscription.provider;
 
 import alexh.weak.Dynamic;
 import me.minecraftauth.lib.AuthService;
-import me.minecraftauth.lib.account.MinecraftAccount;
+import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.feature.subscription.RequireSubscriptionFeature;
 
@@ -52,7 +52,7 @@ public class DiscordMemberPresentProvider extends AbstractSubscriptionProvider {
     public boolean isSubscribed(MinecraftAccount account) throws LookupException {
         String serverId = getServerId();
         if (serverId == null) return false;
-        return AuthService.isPresentInDiscordServer(getServerToken(feature, config), account.getUUID(), serverId);
+        return AuthService.isDiscordMemberPresent(getServerToken(feature, config), account.getUUID(), serverId);
     }
 
 }

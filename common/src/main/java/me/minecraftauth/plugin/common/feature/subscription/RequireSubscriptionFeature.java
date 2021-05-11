@@ -22,7 +22,7 @@ package me.minecraftauth.plugin.common.feature.subscription;
 
 import alexh.weak.Dynamic;
 import lombok.Getter;
-import me.minecraftauth.lib.account.MinecraftAccount;
+import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.feature.Feature;
 import me.minecraftauth.plugin.common.feature.subscription.provider.*;

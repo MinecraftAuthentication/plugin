@@ -24,7 +24,7 @@ import alexh.weak.Dynamic;
 import github.scarsz.configuralize.DynamicConfig;
 import github.scarsz.configuralize.ParseException;
 import lombok.Getter;
-import me.minecraftauth.lib.account.MinecraftAccount;
+import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.abstracted.event.PlayerLoginEvent;
 import me.minecraftauth.plugin.common.feature.subscription.RequireSubscriptionFeature;
