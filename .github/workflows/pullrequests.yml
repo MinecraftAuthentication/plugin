@@ -1,6 +1,6 @@
-name: Compile
+name: Compile pull request
 
-on: push
+on: pull_request
 
 jobs:
   compile:
