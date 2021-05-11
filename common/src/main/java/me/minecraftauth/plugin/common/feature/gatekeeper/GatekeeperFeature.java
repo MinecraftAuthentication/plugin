@@ -48,7 +48,7 @@ public class GatekeeperFeature extends Feature {
         boolean subscribed = false;
         for (MembershipProvider provider : providers) {
             if (provider.isSubscribed(account)) {
-                service.getLogger().info("Minecraft account " + account.getUUID() + " is a member via [" + provider + "]");
+                service.getLogger().info("[Gatekeeper] Minecraft account " + account.getUUID() + " is a member via [" + provider + "]");
                 subscribed = true;
                 break;
             }
@@ -57,7 +57,7 @@ public class GatekeeperFeature extends Feature {
         if (subscribed) {
             return new GatekeeperResult(GatekeeperResult.Type.ALLOWED);
         } else {
-            service.getLogger().info("Denying Minecraft account " + account.getUUID() + ", no providers were successful");
+            service.getLogger().info("[Gatekeeper] Denying Minecraft account " + account.getUUID() + ", no providers were successful");
             return new GatekeeperResult(GatekeeperResult.Type.DENIED, kickMessage);
         }
     }
@@ -101,7 +101,7 @@ public class GatekeeperFeature extends Feature {
 
             providers.add(provider);
         });
-        service.getLogger().info("Utilizing " + providers.size() + " gatekeeper providers");
+        service.getLogger().info("[Gatekeeper] Utilizing " + providers.size() + " providers");
     }
 
 }
