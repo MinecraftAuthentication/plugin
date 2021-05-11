@@ -18,20 +18,20 @@
  * END
  */
 
-package me.minecraftauth.plugin.common.feature.subscription;
+package me.minecraftauth.plugin.common.feature.gatekeeper;
 
 import org.jetbrains.annotations.NotNull;
 
-public class SubscriptionResult {
+public class GatekeeperResult {
 
     @NotNull private final Type type;
     @NotNull private final String message;
 
-    public SubscriptionResult(@NotNull Type type) {
+    public GatekeeperResult(@NotNull Type type) {
         this.type = type;
         this.message = "";
     }
-    public SubscriptionResult(@NotNull Type type, @NotNull String message) {
+    public GatekeeperResult(@NotNull Type type, @NotNull String message) {
         this.type = type;
         this.message = message;
     }
@@ -46,8 +46,8 @@ public class SubscriptionResult {
     public enum Type {
 
         NOT_ENABLED,
-        NOT_SUBSCRIBED(true),
-        SUBSCRIBED;
+        DENIED(true),
+        ALLOWED;
 
         private final boolean willDenyLogin;
 

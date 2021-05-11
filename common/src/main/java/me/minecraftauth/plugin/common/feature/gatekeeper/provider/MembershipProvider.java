@@ -18,7 +18,7 @@
  * END
  */
 
-package me.minecraftauth.plugin.common.feature.subscription.provider;
+package me.minecraftauth.plugin.common.feature.gatekeeper.provider;
 
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;

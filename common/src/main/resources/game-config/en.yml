@@ -1,6 +1,6 @@
 Authentication: token
 
-Subscription:
+Gatekeeper:
   Kick message: "You must be following me on Twitch to join my Minecraft server!"
   Providers:
     - Twitch: following

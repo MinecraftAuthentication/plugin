@@ -28,20 +28,20 @@ import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.abstracted.Logger;
 import me.minecraftauth.plugin.common.abstracted.event.PlayerLoginEvent;
-import me.minecraftauth.plugin.common.feature.subscription.RequireSubscriptionFeature;
-import me.minecraftauth.plugin.common.feature.subscription.SubscriptionResult;
+import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
+import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperResult;
 
 public class GameService {
 
     @Getter private final DynamicConfig config;
     @Getter private final Logger logger;
-    @Getter private final RequireSubscriptionFeature subscriptionFeature;
+    @Getter private final GatekeeperFeature subscriptionFeature;
     @Getter private String serverToken;
 
     private GameService(DynamicConfig config, Logger logger) {
         this.config = config;
         this.logger = logger;
-        this.subscriptionFeature = new RequireSubscriptionFeature(this);
+        this.subscriptionFeature = new GatekeeperFeature(this);
         reload();
 
         logger.info("Minecraft Authentication service ready");
@@ -58,10 +58,10 @@ public class GameService {
     }
 
     public void handleLoginEvent(PlayerLoginEvent event) throws LookupException {
-        SubscriptionResult subscriptionResult = subscriptionFeature.verifySubscription(new MinecraftAccount(event.getUuid()));
+        GatekeeperResult gatekeeperResult = subscriptionFeature.verify(new MinecraftAccount(event.getUuid()));
 
-        if (subscriptionResult.getType().willDenyLogin()) {
-            event.disallow(subscriptionResult.getMessage());
+        if (gatekeeperResult.getType().willDenyLogin()) {
+            event.disallow(gatekeeperResult.getMessage());
         }
     }
 

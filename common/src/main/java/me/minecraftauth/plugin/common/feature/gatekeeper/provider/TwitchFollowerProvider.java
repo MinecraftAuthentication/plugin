@@ -18,32 +18,32 @@
  * END
  */
 
-package me.minecraftauth.plugin.common.feature.subscription.provider;
+package me.minecraftauth.plugin.common.feature.gatekeeper.provider;
 
 import alexh.weak.Dynamic;
 import me.minecraftauth.lib.AuthService;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
-import me.minecraftauth.plugin.common.feature.subscription.RequireSubscriptionFeature;
+import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 
-public class YouTubeSubscriberProvider extends AbstractSubscriptionProvider {
+public class TwitchFollowerProvider extends AbstractSubscriptionProvider {
 
-    private final RequireSubscriptionFeature feature;
+    private final GatekeeperFeature feature;
     private final Dynamic config;
 
-    public YouTubeSubscriberProvider(RequireSubscriptionFeature feature, Dynamic config) {
+    public TwitchFollowerProvider(GatekeeperFeature feature, Dynamic config) {
         this.feature = feature;
         this.config = config;
     }
 
     @Override
     public boolean isSubscribed(MinecraftAccount account) throws LookupException {
-        return AuthService.isSubscribedYouTube(getServerToken(feature, config), account.getUUID());
+        return AuthService.isFollowingTwitch(getServerToken(feature, config), account.getUUID());
     }
 
     @Override
     public String toString() {
-        return "YouTubeSubscriberProvider";
+        return "TwitchFollowerProvider";
     }
 
 }

@@ -18,32 +18,46 @@
  * END
  */
 
-package me.minecraftauth.plugin.common.feature.subscription.provider;
+package me.minecraftauth.plugin.common.feature.gatekeeper.provider;
 
 import alexh.weak.Dynamic;
 import me.minecraftauth.lib.AuthService;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
-import me.minecraftauth.plugin.common.feature.subscription.RequireSubscriptionFeature;
+import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 
-public class PatreonSubscriptionProvider extends AbstractSubscriptionProvider {
+import java.util.Map;
 
-    private final RequireSubscriptionFeature feature;
+public class DiscordRolePresentProvider extends AbstractSubscriptionProvider {
+
+    private final GatekeeperFeature feature;
     private final Dynamic config;
 
-    public PatreonSubscriptionProvider(RequireSubscriptionFeature feature, Dynamic config) {
+    public DiscordRolePresentProvider(GatekeeperFeature feature, Dynamic config) {
         this.feature = feature;
         this.config = config;
     }
 
+    public String getRoleId() {
+        if (config.is(String.class)) {
+            return null;
+        } else if (config.is(Map.class)) {
+            return config.dget("Discord").convert().intoString();
+        } else {
+            throw new IllegalArgumentException("Invalid type for Discord provider");
+        }
+    }
+
     @Override
     public boolean isSubscribed(MinecraftAccount account) throws LookupException {
-        return AuthService.isSubscribedPatreon(getServerToken(feature, config), account.getUUID());
+        String roleId = getRoleId();
+        if (roleId == null) return false;
+        return AuthService.isDiscordRolePresent(getServerToken(feature, config), account.getUUID(), roleId);
     }
 
     @Override
     public String toString() {
-        return "PatreonSubscriptionProvider";
+        return "DiscordRolePresentProvider(role=" + getRoleId() + ")";
     }
 
 }

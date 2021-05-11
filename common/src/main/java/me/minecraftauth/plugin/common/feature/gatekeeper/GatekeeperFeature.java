@@ -18,56 +18,56 @@
  * END
  */
 
-package me.minecraftauth.plugin.common.feature.subscription;
+package me.minecraftauth.plugin.common.feature.gatekeeper;
 
 import alexh.weak.Dynamic;
 import lombok.Getter;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.feature.Feature;
-import me.minecraftauth.plugin.common.feature.subscription.provider.*;
+import me.minecraftauth.plugin.common.feature.gatekeeper.provider.*;
 import me.minecraftauth.plugin.common.service.GameService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class RequireSubscriptionFeature extends Feature {
+public class GatekeeperFeature extends Feature {
 
     @Getter private final GameService service;
     @Getter private final Set<MembershipProvider> providers = new HashSet<>();
     @Getter private String kickMessage = null;
 
-    public RequireSubscriptionFeature(GameService service) {
+    public GatekeeperFeature(GameService service) {
         this.service = service;
         reload();
     }
 
-    public @NotNull SubscriptionResult verifySubscription(MinecraftAccount account) throws LookupException {
-        if (service.getServerToken() == null || providers.size() == 0) return new SubscriptionResult(SubscriptionResult.Type.NOT_ENABLED);
+    public @NotNull GatekeeperResult verify(MinecraftAccount account) throws LookupException {
+        if (service.getServerToken() == null || providers.size() == 0) return new GatekeeperResult(GatekeeperResult.Type.NOT_ENABLED);
         boolean subscribed = false;
         for (MembershipProvider provider : providers) {
             if (provider.isSubscribed(account)) {
-                service.getLogger().info("Minecraft account " + account.getUUID() + " is subscribed via [" + provider + "]");
+                service.getLogger().info("Minecraft account " + account.getUUID() + " is a member via [" + provider + "]");
                 subscribed = true;
                 break;
             }
         }
 
         if (subscribed) {
-            return new SubscriptionResult(SubscriptionResult.Type.SUBSCRIBED);
+            return new GatekeeperResult(GatekeeperResult.Type.ALLOWED);
         } else {
             service.getLogger().info("Denying Minecraft account " + account.getUUID() + ", no providers were successful");
-            return new SubscriptionResult(SubscriptionResult.Type.NOT_SUBSCRIBED, kickMessage);
+            return new GatekeeperResult(GatekeeperResult.Type.DENIED, kickMessage);
         }
     }
 
     @Override
     public void reload() {
-        Dynamic kickMessageDynamic = service.getConfig().dget("Subscription.Kick message");
+        Dynamic kickMessageDynamic = service.getConfig().dget("Gatekeeper.Kick message");
         kickMessage = kickMessageDynamic.isPresent() ? kickMessageDynamic.convert().intoString() : null;
 
-        Dynamic providersDynamic = service.getConfig().dget("Subscription.Providers");
+        Dynamic providersDynamic = service.getConfig().dget("Gatekeeper.Providers");
         providersDynamic.children().forEach(providerDynamic -> {
             MembershipProvider provider;
 
@@ -101,7 +101,7 @@ public class RequireSubscriptionFeature extends Feature {
 
             providers.add(provider);
         });
-        service.getLogger().info("Utilizing " + providers.size() + " subscription providers");
+        service.getLogger().info("Utilizing " + providers.size() + " gatekeeper providers");
     }
 
 }

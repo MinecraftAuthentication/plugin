@@ -18,49 +18,46 @@
  * END
  */
 
-package me.minecraftauth.plugin.common.feature.subscription.provider;
+package me.minecraftauth.plugin.common.feature.gatekeeper.provider;
 
 import alexh.weak.Dynamic;
 import me.minecraftauth.lib.AuthService;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
-import me.minecraftauth.lib.account.platform.twitch.SubTier;
 import me.minecraftauth.lib.exception.LookupException;
-import me.minecraftauth.plugin.common.feature.subscription.RequireSubscriptionFeature;
+import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 
 import java.util.Map;
 
-public class TwitchSubscriptionProvider extends AbstractSubscriptionProvider {
+public class DiscordMemberPresentProvider extends AbstractSubscriptionProvider {
 
-    private final RequireSubscriptionFeature feature;
+    private final GatekeeperFeature feature;
     private final Dynamic config;
 
-    public TwitchSubscriptionProvider(RequireSubscriptionFeature feature, Dynamic config) {
+    public DiscordMemberPresentProvider(GatekeeperFeature feature, Dynamic config) {
         this.feature = feature;
         this.config = config;
     }
 
-    public SubTier getTier() {
+    public String getServerId() {
         if (config.is(String.class)) {
-            // no specific tier given
-            return SubTier.raw(1); // lowest possible sub tier value
+            return null;
         } else if (config.is(Map.class)) {
-
-            int level = config.dget("Twitch").convert().intoInteger();
-            if (level < 999) level *= 1000;
-            return SubTier.raw(level);
+            return config.dget("Discord").convert().intoString().replace("in", "").trim();
         } else {
-            throw new IllegalArgumentException("Invalid type for Twitch provider");
+            throw new IllegalArgumentException("Invalid type for Discord provider");
         }
     }
 
     @Override
     public boolean isSubscribed(MinecraftAccount account) throws LookupException {
-        return AuthService.isSubscribedTwitch(getServerToken(feature, config), account.getUUID(), getTier());
+        String serverId = getServerId();
+        if (serverId == null) return false;
+        return AuthService.isDiscordMemberPresent(getServerToken(feature, config), account.getUUID(), serverId);
     }
 
     @Override
     public String toString() {
-        return "TwitchSubscriptionProvider(tier=" + (getTier().getValue() / 1000) + ")";
+        return "DiscordMemberPresentProvider(server=" + getServerId() + ")";
     }
 
 }

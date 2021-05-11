@@ -18,46 +18,32 @@
  * END
  */
 
-package me.minecraftauth.plugin.common.feature.subscription.provider;
+package me.minecraftauth.plugin.common.feature.gatekeeper.provider;
 
 import alexh.weak.Dynamic;
 import me.minecraftauth.lib.AuthService;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
-import me.minecraftauth.plugin.common.feature.subscription.RequireSubscriptionFeature;
+import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 
-import java.util.Map;
+public class PatreonSubscriptionProvider extends AbstractSubscriptionProvider {
 
-public class DiscordMemberPresentProvider extends AbstractSubscriptionProvider {
-
-    private final RequireSubscriptionFeature feature;
+    private final GatekeeperFeature feature;
     private final Dynamic config;
 
-    public DiscordMemberPresentProvider(RequireSubscriptionFeature feature, Dynamic config) {
+    public PatreonSubscriptionProvider(GatekeeperFeature feature, Dynamic config) {
         this.feature = feature;
         this.config = config;
     }
 
-    public String getServerId() {
-        if (config.is(String.class)) {
-            return null;
-        } else if (config.is(Map.class)) {
-            return config.dget("Discord").convert().intoString().replace("in", "").trim();
-        } else {
-            throw new IllegalArgumentException("Invalid type for Discord provider");
-        }
-    }
-
     @Override
     public boolean isSubscribed(MinecraftAccount account) throws LookupException {
-        String serverId = getServerId();
-        if (serverId == null) return false;
-        return AuthService.isDiscordMemberPresent(getServerToken(feature, config), account.getUUID(), serverId);
+        return AuthService.isSubscribedPatreon(getServerToken(feature, config), account.getUUID());
     }
 
     @Override
     public String toString() {
-        return "DiscordMemberPresentProvider(server=" + getServerId() + ")";
+        return "PatreonSubscriptionProvider";
     }
 
 }
