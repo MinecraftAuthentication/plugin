@@ -55,4 +55,9 @@ public class DiscordRolePresentProvider extends AbstractSubscriptionProvider {
         return AuthService.isDiscordRolePresent(getServerToken(feature, config), account.getUUID(), roleId);
     }
 
+    @Override
+    public String toString() {
+        return "DiscordRolePresentProvider(role=" + getRoleId() + ")";
+    }
+
 }

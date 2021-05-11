@@ -53,6 +53,7 @@ public final class MinecraftAuthBukkit extends JavaPlugin {
         try {
             service = new GameService.Builder()
                     .withConfig(config)
+                    .withLogger(new BukkitLogger(config, getLogger()))
                     .build();
         } catch (ParseException e) {
             e.printStackTrace();

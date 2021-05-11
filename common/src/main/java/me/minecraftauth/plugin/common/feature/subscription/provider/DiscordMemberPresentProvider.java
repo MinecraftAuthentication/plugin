@@ -55,4 +55,9 @@ public class DiscordMemberPresentProvider extends AbstractSubscriptionProvider {
         return AuthService.isDiscordMemberPresent(getServerToken(feature, config), account.getUUID(), serverId);
     }
 
+    @Override
+    public String toString() {
+        return "DiscordMemberPresentProvider(server=" + getServerId() + ")";
+    }
+
 }

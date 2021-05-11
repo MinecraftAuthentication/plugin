@@ -41,4 +41,9 @@ public class TwitchFollowerProvider extends AbstractSubscriptionProvider {
         return AuthService.isFollowingTwitch(getServerToken(feature, config), account.getUUID());
     }
 
+    @Override
+    public String toString() {
+        return "TwitchFollowerProvider";
+    }
+
 }

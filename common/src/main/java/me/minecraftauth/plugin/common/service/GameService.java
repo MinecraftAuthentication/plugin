@@ -26,6 +26,7 @@ import github.scarsz.configuralize.ParseException;
 import lombok.Getter;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
+import me.minecraftauth.plugin.common.abstracted.Logger;
 import me.minecraftauth.plugin.common.abstracted.event.PlayerLoginEvent;
 import me.minecraftauth.plugin.common.feature.subscription.RequireSubscriptionFeature;
 import me.minecraftauth.plugin.common.feature.subscription.SubscriptionResult;
@@ -33,13 +34,17 @@ import me.minecraftauth.plugin.common.feature.subscription.SubscriptionResult;
 public class GameService {
 
     @Getter private final DynamicConfig config;
+    @Getter private final Logger logger;
     @Getter private final RequireSubscriptionFeature subscriptionFeature;
     @Getter private String serverToken;
 
-    private GameService(DynamicConfig config) {
+    private GameService(DynamicConfig config, Logger logger) {
         this.config = config;
+        this.logger = logger;
         this.subscriptionFeature = new RequireSubscriptionFeature(this);
         reload();
+
+        logger.info("Minecraft Authentication service ready");
     }
 
     public void reload() {
@@ -54,6 +59,7 @@ public class GameService {
 
     public void handleLoginEvent(PlayerLoginEvent event) throws LookupException {
         SubscriptionResult subscriptionResult = subscriptionFeature.verifySubscription(new MinecraftAccount(event.getUuid()));
+
         if (subscriptionResult.getType().willDenyLogin()) {
             event.disallow(subscriptionResult.getMessage());
         }
@@ -62,14 +68,20 @@ public class GameService {
     public static class Builder {
 
         private DynamicConfig config;
+        private Logger logger;
 
         public Builder withConfig(DynamicConfig config) {
             this.config = config;
             return this;
         }
 
+        public Builder withLogger(Logger logger) {
+            this.logger = logger;
+            return this;
+        }
+
         public GameService build() throws ParseException {
-            return new GameService(config);
+            return new GameService(config, logger);
         }
 
     }

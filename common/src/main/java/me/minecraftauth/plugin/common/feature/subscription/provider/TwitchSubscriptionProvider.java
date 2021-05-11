@@ -58,4 +58,9 @@ public class TwitchSubscriptionProvider extends AbstractSubscriptionProvider {
         return AuthService.isSubscribedTwitch(getServerToken(feature, config), account.getUUID(), getTier());
     }
 
+    @Override
+    public String toString() {
+        return "TwitchSubscriptionProvider(tier=" + (getTier().getValue() / 1000) + ")";
+    }
+
 }

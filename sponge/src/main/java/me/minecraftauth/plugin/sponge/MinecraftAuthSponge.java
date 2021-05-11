@@ -74,6 +74,7 @@ public class MinecraftAuthSponge {
         try {
             service = new GameService.Builder()
                     .withConfig(config)
+                    .withLogger(new SpongeLogger(config, logger))
                     .build();
         } catch (ParseException e) {
             e.printStackTrace();

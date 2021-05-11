@@ -41,4 +41,9 @@ public class PatreonSubscriptionProvider extends AbstractSubscriptionProvider {
         return AuthService.isSubscribedPatreon(getServerToken(feature, config), account.getUUID());
     }
 
+    @Override
+    public String toString() {
+        return "PatreonSubscriptionProvider";
+    }
+
 }

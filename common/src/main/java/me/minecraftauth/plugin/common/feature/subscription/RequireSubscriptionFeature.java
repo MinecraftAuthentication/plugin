@@ -48,11 +48,18 @@ public class RequireSubscriptionFeature extends Feature {
         boolean subscribed = false;
         for (MembershipProvider provider : providers) {
             if (provider.isSubscribed(account)) {
+                service.getLogger().info("Minecraft account " + account.getUUID() + " is subscribed via [" + provider + "]");
                 subscribed = true;
                 break;
             }
         }
-        return subscribed ? new SubscriptionResult(SubscriptionResult.Type.SUBSCRIBED) : new SubscriptionResult(SubscriptionResult.Type.NOT_SUBSCRIBED, kickMessage);
+
+        if (subscribed) {
+            return new SubscriptionResult(SubscriptionResult.Type.SUBSCRIBED);
+        } else {
+            service.getLogger().info("Denying Minecraft account " + account.getUUID() + ", no providers were successful");
+            return new SubscriptionResult(SubscriptionResult.Type.NOT_SUBSCRIBED, kickMessage);
+        }
     }
 
     @Override
@@ -94,6 +101,7 @@ public class RequireSubscriptionFeature extends Feature {
 
             providers.add(provider);
         });
+        service.getLogger().info("Utilizing " + providers.size() + " subscription providers");
     }
 
 }

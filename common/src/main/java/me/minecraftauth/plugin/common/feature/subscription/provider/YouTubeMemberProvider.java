@@ -41,4 +41,9 @@ public class YouTubeMemberProvider extends AbstractSubscriptionProvider {
         return AuthService.isMemberYouTube(getServerToken(feature, config), account.getUUID());
     }
 
+    @Override
+    public String toString() {
+        return "YouTubeMemberProvider";
+    }
+
 }
