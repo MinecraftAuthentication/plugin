@@ -26,6 +26,8 @@ import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 
+import java.util.Map;
+
 public class PatreonSubscriptionProvider extends AbstractSubscriptionProvider {
 
     private final GatekeeperFeature feature;
@@ -36,14 +38,31 @@ public class PatreonSubscriptionProvider extends AbstractSubscriptionProvider {
         this.config = config;
     }
 
+    public String getTier() {
+        if (config.is(String.class)) {
+            // no specific tier given
+            return null;
+        } else if (config.is(Map.class)) {
+            return config.dget("Patreon").convert().intoString();
+        } else {
+            throw new IllegalArgumentException("Invalid type for Patreon provider");
+        }
+    }
+
     @Override
     public boolean isSubscribed(MinecraftAccount account) throws LookupException {
-        return AuthService.isSubscribedPatreon(getServerToken(feature, config), account.getUUID());
+        String tier = getTier();
+        if (tier == null) {
+            return AuthService.isSubscribedPatreon(getServerToken(feature, config), account.getUUID());
+        } else {
+            return AuthService.isSubscribedPatreon(getServerToken(feature, config), account.getUUID(), tier);
+        }
     }
 
     @Override
     public String toString() {
-        return "PatreonSubscriptionProvider";
+        String tier = getTier();
+        return "PatreonSubscriptionProvider" + (tier != null ? "(tier=" + tier + ")" : "");
     }
 
 }
