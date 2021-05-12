@@ -44,7 +44,6 @@ public class TwitchSubscriptionProvider extends AbstractSubscriptionProvider {
             // no specific tier given
             return SubTier.raw(1); // lowest possible sub tier value
         } else if (config.is(Map.class)) {
-
             int level = config.dget("Twitch").convert().intoInteger();
             if (level < 999) level *= 1000;
             return SubTier.raw(level);
