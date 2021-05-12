@@ -61,6 +61,12 @@
                             </goals>
                             <configuration>
                                 <createDependencyReducedPom>false</createDependencyReducedPom>
+                                <relocations>
+                                    <relocation>
+                                        <pattern>github.scarsz.configuralize</pattern>
+                                        <shadedPattern>me.minecraftauth.plugin.config</shadedPattern>
+                                    </relocation>
+                                </relocations>
                             </configuration>
                         </execution>
                     </executions>
