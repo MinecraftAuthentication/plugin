@@ -21,10 +21,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/**gradle**') }}
           restore-keys: ${{ runner.os }}-maven
-      - name: Package
-        run: mvn --batch-mode --update-snapshots package
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build
+        run: ./gradlew build
       - name: Upload artifacts
         uses: eine/tip@master
         with:
