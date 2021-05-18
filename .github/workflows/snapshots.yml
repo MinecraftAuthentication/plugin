@@ -34,5 +34,5 @@ jobs:
           tag: snapshot
           rm: true
           files: |
-            bukkit/target/MinecraftAuth-Bukkit-*.jar
-            sponge/target/MinecraftAuth-Sponge-*.jar
+            bukkit/build/libs/MinecraftAuth-Bukkit-*.jar
+            sponge/build/libs/MinecraftAuth-Sponge-*.jar
