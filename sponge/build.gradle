@@ -1,0 +1,30 @@
+import org.spongepowered.gradle.plugin.config.PluginLoaders
+
+plugins {
+    id 'org.spongepowered.gradle.plugin' version '1.1.0'
+}
+
+repositories {
+    maven {
+        url 'https://repo.spongepowered.org/maven/'
+    }
+}
+
+dependencies {
+    implementation project(':common')
+    implementation 'org.spongepowered:spongeapi:7.3.0'
+}
+
+jar {
+    archivesBaseName = 'MinecraftAuth-Sponge'
+}
+
+sponge {
+    apiVersion('7.3.0')
+    plugin('minecraftauth') {
+        loader(PluginLoaders.JAVA_PLAIN)
+        mainClass('me.minecraftauth.plugin.sponge')
+        version(project.version)
+        description('Authenticate players in your Minecraft server to various services')
+    }
+}

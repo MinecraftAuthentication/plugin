@@ -1,0 +1,74 @@
+plugins {
+    id 'io.freefair.lombok' version '5.3.3.3'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'org.cadixdev.licenser' version '0.6.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+version = '1.0-SNAPSHOT'
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.freefair.lombok'
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'org.cadixdev.licenser'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    version = rootProject.version
+    generateLombokConfig.enabled = false
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://nexus.scarsz.me/content/groups/public/'
+        }
+    }
+
+    jar {
+        // avoid needing to run licenseFormat & shadowJar when building
+        dependsOn licenseFormat
+        finalizedBy shadowJar
+    }
+
+    shadowJar {
+        relocate 'github.scarsz.configuralize', 'me.minecraftauth.plugin.config'
+
+        //noinspection GroovyAssignabilityCheck
+        archiveClassifier = 'shaded'
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        from sourceSets.main.allSource
+
+        //noinspection GroovyAssignabilityCheck
+        archiveClassifier = 'sources'
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        from javadoc.destinationDir
+
+        //noinspection GroovyAssignabilityCheck
+        archiveClassifier = 'javadoc'
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
+    license {
+        header = rootProject.file('LICENSE_HEADER')
+        properties {
+            String inception = "2021"
+            String currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+            year = inception == currentYear ? currentYear : inception + "-" + currentYear
+        }
+        include '**/*.java' // only java files
+    }
+}
