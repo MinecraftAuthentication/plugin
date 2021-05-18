@@ -1,11 +1,15 @@
 Authentication: token
 
-Subscription:
+Gatekeeper:
   Kick message: "You must be following me on Twitch to join my Minecraft server!"
-  Providers:
-    - Twitch: following
-#    - Twitch
-#    - Patreon
-#    - Discord: 000000000000000000
-#    - YouTube: subscriber
-#    - YouTube
+  Conditions:
+    - TwitchFollower()
+    #- TwitchSubscriber(3)
+    #- TwitchSubscriber() and not(DiscordRole(naughty))
+    #- PatreonMember()
+    #- PatreonMember("gold")
+    #- DiscordRole(000000000000000000)
+    #- DiscordServer(000000000000000000)
+    #- YouTubeSubscriber()
+    #- YouTubeMember()
+    #- DiscordServer(000000000000000000) and TwitchSubscriber()

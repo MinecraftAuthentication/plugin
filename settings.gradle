@@ -1,0 +1,3 @@
+rootProject.name = 'MinecraftAuthentication-Plugin'
+
+include 'common', 'bukkit', 'sponge', 'bungeecord', 'velocity'
