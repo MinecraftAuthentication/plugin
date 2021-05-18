@@ -18,32 +18,34 @@
  * END
  */
 
-package me.minecraftauth.plugin.common.feature.gatekeeper.provider;
+package me.minecraftauth.plugin.common.feature.gatekeeper.function;
 
-import alexh.weak.Dynamic;
+import com.udojava.evalex.Expression;
 import me.minecraftauth.lib.AuthService;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 
-public class YouTubeSubscriberProvider extends AbstractSubscriptionProvider {
+import java.util.List;
+import java.util.function.Supplier;
 
-    private final GatekeeperFeature feature;
-    private final Dynamic config;
+public class YouTubeMemberFunction extends AbstractFunction {
 
-    public YouTubeSubscriberProvider(GatekeeperFeature feature, Dynamic config) {
-        this.feature = feature;
-        this.config = config;
+    public YouTubeMemberFunction(GatekeeperFeature gatekeeper, Supplier<MinecraftAccount> accountSupplier) {
+        super(gatekeeper, "YouTubeMember", -1, accountSupplier);
     }
 
     @Override
-    public boolean isSubscribed(MinecraftAccount account) throws LookupException {
-        return AuthService.isSubscribedYouTube(getServerToken(feature, config), account.getUUID());
-    }
+    public Expression.LazyNumber lazyEval(List<Expression.LazyNumber> lazyParams) {
+        String tier = null;
+        if (lazyParams.size() >= 1) tier = lazyParams.get(0).getString();
 
-    @Override
-    public String toString() {
-        return "YouTubeSubscriberProvider";
+        try {
+            return AuthService.isMemberYouTube(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), tier) ? TRUE : FALSE;
+        } catch (LookupException e) {
+            e.printStackTrace();
+            return FALSE;
+        }
     }
 
 }

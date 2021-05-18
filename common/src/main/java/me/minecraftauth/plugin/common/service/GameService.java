@@ -35,13 +35,13 @@ public class GameService {
 
     @Getter private final DynamicConfig config;
     @Getter private final Logger logger;
-    @Getter private final GatekeeperFeature subscriptionFeature;
+    @Getter private final GatekeeperFeature gatekeeperFeature;
     @Getter private String serverToken;
 
     private GameService(DynamicConfig config, Logger logger) {
         this.config = config;
         this.logger = logger;
-        this.subscriptionFeature = new GatekeeperFeature(this);
+        this.gatekeeperFeature = new GatekeeperFeature(this);
         reload();
 
         logger.info("Minecraft Authentication service ready");
@@ -54,11 +54,11 @@ public class GameService {
 
     public void fullReload() {
         reload();
-        subscriptionFeature.reload();
+        gatekeeperFeature.reload();
     }
 
     public void handleLoginEvent(PlayerLoginEvent event) throws LookupException {
-        GatekeeperResult gatekeeperResult = subscriptionFeature.verify(new MinecraftAccount(event.getUuid()));
+        GatekeeperResult gatekeeperResult = gatekeeperFeature.verify(new MinecraftAccount(event.getUuid()));
 
         if (gatekeeperResult.getType().willDenyLogin()) {
             event.disallow(gatekeeperResult.getMessage());

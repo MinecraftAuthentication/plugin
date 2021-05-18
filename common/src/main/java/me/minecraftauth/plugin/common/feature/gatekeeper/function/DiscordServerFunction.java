@@ -18,32 +18,35 @@
  * END
  */
 
-package me.minecraftauth.plugin.common.feature.gatekeeper.provider;
+package me.minecraftauth.plugin.common.feature.gatekeeper.function;
 
-import alexh.weak.Dynamic;
+import com.udojava.evalex.Expression;
 import me.minecraftauth.lib.AuthService;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 
-public class TwitchFollowerProvider extends AbstractSubscriptionProvider {
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Supplier;
 
-    private final GatekeeperFeature feature;
-    private final Dynamic config;
+public class DiscordServerFunction extends AbstractFunction {
 
-    public TwitchFollowerProvider(GatekeeperFeature feature, Dynamic config) {
-        this.feature = feature;
-        this.config = config;
+    public DiscordServerFunction(GatekeeperFeature gatekeeper, Supplier<MinecraftAccount> accountSupplier) {
+        super(gatekeeper, "DiscordServer", 1, accountSupplier);
     }
 
     @Override
-    public boolean isSubscribed(MinecraftAccount account) throws LookupException {
-        return AuthService.isFollowingTwitch(getServerToken(feature, config), account.getUUID());
-    }
+    public Expression.LazyNumber lazyEval(List<Expression.LazyNumber> lazyParams) {
+        String server = lazyParams.get(0).getString();
+        Objects.requireNonNull(server, "No server ID given for " + getClass().getSimpleName());
 
-    @Override
-    public String toString() {
-        return "TwitchFollowerProvider";
+        try {
+            return AuthService.isDiscordMemberPresent(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), server) ? TRUE : FALSE;
+        } catch (LookupException e) {
+            e.printStackTrace();
+            return FALSE;
+        }
     }
 
 }

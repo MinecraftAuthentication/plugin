@@ -21,45 +21,75 @@
 package me.minecraftauth.plugin.common.feature.gatekeeper;
 
 import alexh.weak.Dynamic;
+import com.udojava.evalex.Expression;
 import lombok.Getter;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
-import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.feature.Feature;
-import me.minecraftauth.plugin.common.feature.gatekeeper.provider.*;
+import me.minecraftauth.plugin.common.feature.gatekeeper.function.*;
 import me.minecraftauth.plugin.common.service.GameService;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 public class GatekeeperFeature extends Feature {
 
     @Getter private final GameService service;
-    @Getter private final Set<MembershipProvider> providers = new HashSet<>();
+    @Getter private final Set<Expression> expressions = new HashSet<>();
+    @Getter private final Set<AbstractFunction> functions = new HashSet<>();
     @Getter private String kickMessage = null;
+
+    private MinecraftAccount accountBeingEvaluated = null;
+    private final ReentrantLock expressionLock = new ReentrantLock();
 
     public GatekeeperFeature(GameService service) {
         this.service = service;
+
+        Supplier<MinecraftAccount> supplier = () -> accountBeingEvaluated;
+        this.functions.add(new DiscordRoleFunction(this, supplier));
+        this.functions.add(new DiscordServerFunction(this, supplier));
+        this.functions.add(new PatreonMemberFunction(this, supplier));
+        this.functions.add(new TwitchFollowerFunction(this, supplier));
+        this.functions.add(new TwitchSubscriberFunction(this, supplier));
+        this.functions.add(new YouTubeMemberFunction(this, supplier));
+        this.functions.add(new YouTubeSubscriberFunction(this, supplier));
+
         reload();
     }
 
-    public @NotNull GatekeeperResult verify(MinecraftAccount account) throws LookupException {
-        if (service.getServerToken() == null || providers.size() == 0) return new GatekeeperResult(GatekeeperResult.Type.NOT_ENABLED);
-        boolean subscribed = false;
-        for (MembershipProvider provider : providers) {
-            if (provider.isSubscribed(account)) {
-                service.getLogger().info("[Gatekeeper] Minecraft account " + account.getUUID() + " is a member via [" + provider + "]");
-                subscribed = true;
-                break;
-            }
-        }
+    public @NotNull GatekeeperResult verify(MinecraftAccount account) {
+        if (service.getServerToken() == null || expressions.size() == 0) return new GatekeeperResult(GatekeeperResult.Type.NOT_ENABLED);
 
-        if (subscribed) {
-            return new GatekeeperResult(GatekeeperResult.Type.ALLOWED);
-        } else {
-            service.getLogger().info("[Gatekeeper] Denying Minecraft account " + account.getUUID() + ", no providers were successful");
-            return new GatekeeperResult(GatekeeperResult.Type.DENIED, kickMessage);
-        }
+        try {
+            if (!expressionLock.tryLock(5, TimeUnit.SECONDS))
+                return new GatekeeperResult(GatekeeperResult.Type.DENIED, "Unable to schedule verification, try again");
+
+            try {
+                this.accountBeingEvaluated = account;
+                boolean allowed = false;
+
+                for (Expression expression : expressions) {
+                    if (expression.eval().compareTo(BigDecimal.ONE) == 0) {
+                        service.getLogger().info("[Gatekeeper] Minecraft account " + account.getUUID() + " is being allowed via [" + expression.getOriginalExpression() + "]");
+                        allowed = true;
+                        break;
+                    }
+                }
+
+                if (allowed) {
+                    return new GatekeeperResult(GatekeeperResult.Type.ALLOWED);
+                } else {
+                    service.getLogger().info("[Gatekeeper] Denying Minecraft account " + account.getUUID() + ", no conditions were successful");
+                }
+            } finally {
+                expressionLock.unlock();
+            }
+        } catch (InterruptedException ignored) {}
+        return new GatekeeperResult(GatekeeperResult.Type.DENIED, kickMessage);
     }
 
     @Override
@@ -67,41 +97,12 @@ public class GatekeeperFeature extends Feature {
         Dynamic kickMessageDynamic = service.getConfig().dget("Gatekeeper.Kick message");
         kickMessage = kickMessageDynamic.isPresent() ? kickMessageDynamic.convert().intoString() : null;
 
-        Dynamic providersDynamic = service.getConfig().dget("Gatekeeper.Providers");
-        providersDynamic.children().forEach(providerDynamic -> {
-            MembershipProvider provider;
-
-            if ((providerDynamic.is(String.class) && providerDynamic.asString().equalsIgnoreCase("discord"))
-                    || providerDynamic.dget("Discord").isPresent()) {
-                if (providerDynamic.isMap() && providerDynamic.get("Discord").convert().intoString().toLowerCase().startsWith("in")) {
-                    provider = new DiscordMemberPresentProvider(this, providerDynamic);
-                } else {
-                    provider = new DiscordRolePresentProvider(this, providerDynamic);
-                }
-            } else if ((providerDynamic.is(String.class) && providerDynamic.asString().equalsIgnoreCase("patreon"))
-                    || providerDynamic.dget("Patreon").isPresent()) {
-                provider = new PatreonSubscriptionProvider(this, providerDynamic);
-            } else if ((providerDynamic.is(String.class) && providerDynamic.asString().equalsIgnoreCase("twitch"))
-                    || providerDynamic.dget("Twitch").isPresent()) {
-                if (providerDynamic.isMap() && providerDynamic.dget("Twitch").convert().intoString().toLowerCase().startsWith("follow")) {
-                    provider = new TwitchFollowerProvider(this, providerDynamic);
-                } else {
-                    provider = new TwitchSubscriptionProvider(this, providerDynamic);
-                }
-            } else if ((providerDynamic.is(String.class) && providerDynamic.asString().equalsIgnoreCase("youtube"))
-                    || providerDynamic.dget("YouTube").isPresent()) {
-                if (providerDynamic.isMap() && providerDynamic.dget("YouTube").asString().toLowerCase().startsWith("sub")) {
-                    provider = new YouTubeSubscriberProvider(this, providerDynamic);
-                } else {
-                    provider = new YouTubeMemberProvider(this, providerDynamic);
-                }
-            } else {
-                throw new IllegalArgumentException("Unknown provider config " + providerDynamic.key().convert().intoString());
-            }
-
-            providers.add(provider);
+        service.getConfig().dget("Gatekeeper.Conditions").children().forEach(d -> {
+            Expression expression = new Expression(d.asString());
+            for (AbstractFunction function : functions) expression.addLazyFunction(function);
+            expressions.add(expression);
         });
-        service.getLogger().info("[Gatekeeper] Utilizing " + providers.size() + " providers");
+        service.getLogger().info("[Gatekeeper] Controlling entry based on " + expressions.size() + " conditions");
     }
 
 }
