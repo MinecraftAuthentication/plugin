@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public class TwitchSubscriberFunction extends AbstractFunction {
 
     public TwitchSubscriberFunction(GatekeeperFeature gatekeeper, Supplier<MinecraftAccount> accountSupplier) {
-        super(gatekeeper, "YouTubeMember", -1, accountSupplier);
+        super(gatekeeper, "TwitchSubscriber", -1, accountSupplier);
     }
 
     @Override

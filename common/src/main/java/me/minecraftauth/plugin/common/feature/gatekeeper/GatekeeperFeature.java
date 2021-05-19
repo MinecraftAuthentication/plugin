@@ -17,7 +17,9 @@
 package me.minecraftauth.plugin.common.feature.gatekeeper;
 
 import alexh.weak.Dynamic;
+import com.udojava.evalex.AbstractOperator;
 import com.udojava.evalex.Expression;
+import com.udojava.evalex.Operator;
 import lombok.Getter;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.plugin.common.feature.Feature;
@@ -27,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -36,6 +39,7 @@ public class GatekeeperFeature extends Feature {
 
     @Getter private final GameService service;
     @Getter private final Set<Expression> expressions = new HashSet<>();
+    @Getter private final Set<Operator> operators = new HashSet<>();
     @Getter private final Set<AbstractFunction> functions = new HashSet<>();
     @Getter private String kickMessage = null;
 
@@ -53,6 +57,23 @@ public class GatekeeperFeature extends Feature {
         this.functions.add(new TwitchSubscriberFunction(this, supplier));
         this.functions.add(new YouTubeMemberFunction(this, supplier));
         this.functions.add(new YouTubeSubscriberFunction(this, supplier));
+
+        this.operators.add(new AbstractOperator("and", 4, false, true) {
+            @Override
+            public BigDecimal eval(BigDecimal v1, BigDecimal v2) {
+                Objects.requireNonNull(v1, "No left boolean for AND operator");
+                Objects.requireNonNull(v2, "No right boolean for AND operator");
+
+                boolean b1 = v1.compareTo(BigDecimal.ZERO) != 0;
+
+                if (!b1) {
+                    return BigDecimal.ZERO;
+                } else {
+                    boolean b2 = v2.compareTo(BigDecimal.ZERO) != 0;
+                    return b2 ? BigDecimal.ONE : BigDecimal.ZERO;
+                }
+            }
+        });
 
         reload();
     }
@@ -96,6 +117,7 @@ public class GatekeeperFeature extends Feature {
         service.getConfig().dget("Gatekeeper.Conditions").children().forEach(d -> {
             Expression expression = new Expression(d.asString());
             for (AbstractFunction function : functions) expression.addLazyFunction(function);
+            for (Operator operator : operators) expression.addOperator(operator);
             expressions.add(expression);
         });
         service.getLogger().info("[Gatekeeper] Controlling entry based on " + expressions.size() + " conditions");

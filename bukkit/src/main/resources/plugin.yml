@@ -1,5 +1,5 @@
 name: MinecraftAuth
-version: ${project.version}
+version: @VERSION@
 main: me.minecraftauth.plugin.bukkit.MinecraftAuthBukkit
 api-version: 1.15
 authors: [ MinecraftAuth ]

@@ -5,7 +5,7 @@ Gatekeeper:
   Conditions:
     - TwitchFollower()
     #- TwitchSubscriber(3)
-    #- TwitchSubscriber() and not(DiscordRole(naughty))
+    #- TwitchSubscriber() and not(DiscordRole("naughty"))
     #- PatreonMember()
     #- PatreonMember("gold")
     #- DiscordRole(000000000000000000)

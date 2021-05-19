@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public class DiscordRoleFunction extends AbstractFunction {
 
     public DiscordRoleFunction(GatekeeperFeature gatekeeper, Supplier<MinecraftAccount> accountSupplier) {
-        super(gatekeeper, "DiscordServer", 1, accountSupplier);
+        super(gatekeeper, "DiscordRole", 1, accountSupplier);
     }
 
     @Override

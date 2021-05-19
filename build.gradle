@@ -39,7 +39,7 @@ subprojects {
         relocate 'github.scarsz.configuralize', 'me.minecraftauth.plugin.config'
 
         //noinspection GroovyAssignabilityCheck
-        archiveClassifier = 'shaded'
+        archiveClassifier = ''
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {
