@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 repositories {
     maven {
         url 'https://oss.sonatype.org/content/groups/public/'
@@ -17,3 +19,6 @@ jar {
     archivesBaseName = 'MinecraftAuth-Bungee'
 }
 
+processResources {
+    filter(ReplaceTokens, tokens: ['VERSION': project.version])
+}
