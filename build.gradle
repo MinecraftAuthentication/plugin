@@ -4,10 +4,6 @@ plugins {
     id 'org.cadixdev.licenser' version '0.6.0'
 }
 
-repositories {
-    mavenCentral()
-}
-
 version = '1.0-SNAPSHOT'
 
 subprojects {
