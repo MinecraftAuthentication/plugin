@@ -64,10 +64,10 @@ subprojects {
     license {
         header = rootProject.file('LICENSE_HEADER')
         properties {
-            String inception = "2021"
+            String inception = '2021'
             String currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
-            year = inception == currentYear ? currentYear : inception + "-" + currentYear
+            year = inception == currentYear ? currentYear : inception + '-' + currentYear
         }
         include '**/*.java' // only java files
     }
