@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 repositories {
     maven {
         url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
@@ -14,3 +16,6 @@ jar {
     archivesBaseName = 'MinecraftAuth-Bukkit'
 }
 
+processResources {
+    filter(ReplaceTokens, tokens: ['VERSION': project.version])
+}
