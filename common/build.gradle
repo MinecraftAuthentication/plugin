@@ -11,3 +11,12 @@ dependencies {
 jar {
     archivesBaseName = 'MinecraftAuth-Common'
 }
+
+shadowJar {
+    // Overrides the classifier in the root project's build.gradle
+    // Set the classifier to something, to avoid having the same file name as the regular jar task.
+    // This prevents warnings during build, as this module is used as a dependency in other modules
+
+    //noinspection GroovyAssignabilityCheck
+    archiveClassifier = 'shaded'
+}
