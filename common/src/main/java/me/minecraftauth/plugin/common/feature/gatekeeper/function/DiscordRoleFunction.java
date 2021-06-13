@@ -37,12 +37,14 @@ public class DiscordRoleFunction extends AbstractFunction {
         String role = lazyParams.get(0).getString();
         Objects.requireNonNull(role, "No role ID given for " + getClass().getSimpleName());
 
-        try {
-            return AuthService.isDiscordRolePresent(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), role) ? TRUE : FALSE;
-        } catch (LookupException e) {
-            e.printStackTrace();
-            return FALSE;
-        }
+        return VALUE_CACHE.get("DiscordRoleFunction" + getAccount().getUUID() + role, r -> {
+            try {
+                return AuthService.isDiscordRolePresent(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), role) ? TRUE : FALSE;
+            } catch (LookupException e) {
+                e.printStackTrace();
+                return FALSE;
+            }
+        });
     }
 
 }

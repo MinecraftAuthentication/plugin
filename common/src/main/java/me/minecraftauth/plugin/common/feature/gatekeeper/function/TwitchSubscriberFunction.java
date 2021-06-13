@@ -38,12 +38,14 @@ public class TwitchSubscriberFunction extends AbstractFunction {
         if (lazyParams.size() >= 1) tierRaw = lazyParams.get(0).eval().intValueExact();
         SubTier tier = SubTier.level(tierRaw);
 
-        try {
-            return AuthService.isSubscribedTwitch(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), tier) ? TRUE : FALSE;
-        } catch (LookupException e) {
-            e.printStackTrace();
-            return FALSE;
-        }
+        return VALUE_CACHE.get("TwitchSubscriberFunction" + getAccount().getUUID() + tier.getValue(), s -> {
+            try {
+                return AuthService.isSubscribedTwitch(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), tier) ? TRUE : FALSE;
+            } catch (LookupException e) {
+                e.printStackTrace();
+                return FALSE;
+            }
+        });
     }
 
 }

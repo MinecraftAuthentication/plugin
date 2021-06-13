@@ -37,12 +37,14 @@ public class DiscordServerFunction extends AbstractFunction {
         String server = lazyParams.get(0).getString();
         Objects.requireNonNull(server, "No server ID given for " + getClass().getSimpleName());
 
-        try {
-            return AuthService.isDiscordMemberPresent(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), server) ? TRUE : FALSE;
-        } catch (LookupException e) {
-            e.printStackTrace();
-            return FALSE;
-        }
+        return VALUE_CACHE.get("DiscordServerFunction" + getAccount().getUUID() + server, s -> {
+            try {
+                return AuthService.isDiscordMemberPresent(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), server) ? TRUE : FALSE;
+            } catch (LookupException e) {
+                e.printStackTrace();
+                return FALSE;
+            }
+        });
     }
 
 }

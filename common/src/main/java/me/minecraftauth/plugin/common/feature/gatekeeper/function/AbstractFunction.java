@@ -16,6 +16,8 @@
 
 package me.minecraftauth.plugin.common.feature.gatekeeper.function;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.udojava.evalex.AbstractLazyFunction;
 import com.udojava.evalex.Expression;
 import lombok.Getter;
@@ -23,9 +25,12 @@ import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public abstract class AbstractFunction extends AbstractLazyFunction {
+
+    static final Cache<String, Expression.LazyNumber> VALUE_CACHE = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).build();
 
     public static final Expression.LazyNumber TRUE = new Expression.LazyNumber() {
         @Override

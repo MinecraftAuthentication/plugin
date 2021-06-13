@@ -5,6 +5,7 @@ plugins {
 dependencies {
     api 'me.minecraftauth:lib:1.1.0-SNAPSHOT'
     api 'github.scarsz:configuralize:1.3.2'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.0.2'
     implementation 'com.udojava:EvalEx:2.5'
 }
 
