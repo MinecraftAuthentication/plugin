@@ -1,0 +1,9 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="Apache License, Version 2.0"
+
+[[mods]]
+modId="minecraftauth"
+version="${file.jarVersion}"
+displayName="Minecraft Authentication"
+authors="Authenticate players in your Minecraft server to various services"

@@ -1,7 +1,7 @@
 plugins {
     id 'io.freefair.lombok' version '5.3.3.3'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
-    id 'org.cadixdev.licenser' version '0.6.0'
+    id 'org.cadixdev.licenser' version '0.6.1'
 }
 
 version = '1.0-SNAPSHOT'
@@ -15,7 +15,6 @@ subprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    version = rootProject.version
     generateLombokConfig.enabled = false
 
     repositories {
@@ -62,7 +61,6 @@ subprojects {
         properties {
             String inception = '2021'
             String currentYear = Calendar.getInstance().get(Calendar.YEAR)
-
             year = inception == currentYear ? currentYear : inception + '-' + currentYear
         }
         include '**/*.java' // only java files
