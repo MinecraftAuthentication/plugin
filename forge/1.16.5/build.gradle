@@ -14,7 +14,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "${mod_version}-1.16.5"
+version = "1.16.5"
 group = "me.minecraftauth"
 archivesBaseName = "${modid}"
 
