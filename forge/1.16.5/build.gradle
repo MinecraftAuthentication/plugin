@@ -101,3 +101,7 @@ apply plugin: 'org.spongepowered.mixin'
 mixin {
     add sourceSets.main, "${modid}.refmap.json"
 }
+
+// ensure shadowJar gets re-obfuscated
+tasks.shadowJar.dependsOn "reobfJar"
+reobf { shadowJar {} }
