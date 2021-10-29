@@ -10,9 +10,9 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
 
 version = "1.16.5"
 group = "me.minecraftauth"
@@ -50,6 +50,7 @@ repositories{
 dependencies {
     shaded project(':common')
     minecraft "net.minecraftforge:forge:1.16.5-36.2.0"
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
 sourceSets {
