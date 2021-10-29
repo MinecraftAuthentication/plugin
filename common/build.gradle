@@ -2,6 +2,10 @@ plugins {
     id 'java-library'
 }
 
+configurations {
+    api.extendsFrom(shaded)
+}
+
 dependencies {
     shaded 'me.minecraftauth:lib:1.1.0-SNAPSHOT'
     shaded 'github.scarsz:configuralize:1.3.2'
@@ -14,8 +18,6 @@ jar {
 }
 
 shadowJar {
-//    configurations = [project.configurations.runtime]
-
     // Overrides the classifier in the root project's build.gradle
     // Set the classifier to something, to avoid having the same file name as the regular jar task.
     // This prevents warnings during build, as this module is used as a dependency in other modules

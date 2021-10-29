@@ -26,7 +26,7 @@ subprojects {
 
     configurations {
         shaded
-        api.extendsFrom(shaded)
+        implementation.extendsFrom(shaded)
     }
 
     jar {
