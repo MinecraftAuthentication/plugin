@@ -24,6 +24,11 @@ subprojects {
         }
     }
 
+    configurations {
+        shaded
+        api.extendsFrom(shaded)
+    }
+
     jar {
         // avoid needing to run licenseFormat & shadowJar when building
         dependsOn licenseFormat
@@ -31,7 +36,8 @@ subprojects {
     }
 
     shadowJar {
-        relocate 'github.scarsz.configuralize', 'me.minecraftauth.plugin.config'
+        configurations = [project.configurations.shaded]
+        relocate 'github.scarsz.configuralize', 'me.minecraftauth.config'
 
         //noinspection GroovyAssignabilityCheck
         archiveClassifier = ''

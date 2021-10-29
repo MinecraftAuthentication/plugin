@@ -48,7 +48,7 @@ repositories{
 }
 
 dependencies {
-    implementation project(':common')
+    shaded project(':common')
     minecraft "net.minecraftforge:forge:1.16.5-36.2.0"
 }
 
