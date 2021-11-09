@@ -35,7 +35,7 @@ import java.io.IOException;
 public class MinecraftAuthMod {
 
     public static final String MOD_ID = "minecraftauth";
-    private static final Logger LOGGER = LogManager.getLogger();
+    @Getter private static final Logger logger = LogManager.getLogger();
     @Getter private static MinecraftAuthMod instance;
 
     @Getter private GameService service;
@@ -62,19 +62,19 @@ public class MinecraftAuthMod {
                     .withLogger(new me.minecraftauth.plugin.common.abstracted.Logger() {
                         @Override
                         public void info(String message) {
-                            LOGGER.info(message);
+                            logger.info(message);
                         }
                         @Override
                         public void warning(String message) {
-                            LOGGER.warn(message);
+                            logger.warn(message);
                         }
                         @Override
                         public void error(String message) {
-                            LOGGER.error(message);
+                            logger.error(message);
                         }
                         @Override
                         public void debug(String message) {
-                            LOGGER.debug(message);
+                            logger.debug(message);
                         }
                     })
                     .build();

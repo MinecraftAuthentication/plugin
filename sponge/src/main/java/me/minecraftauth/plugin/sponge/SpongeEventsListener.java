@@ -31,7 +31,8 @@ public class SpongeEventsListener {
         try {
             MinecraftAuthSponge.getInstance().getService().handleLoginEvent(new PlayerLoginEvent(
                     event.getProfile().getUniqueId(),
-                    event.getProfile().getName().orElse("")
+                    event.getProfile().getName().orElse(""),
+                    false // sponge has no concept of "ops"
             ) {
                 @Override
                 public void disallow(String message) {
