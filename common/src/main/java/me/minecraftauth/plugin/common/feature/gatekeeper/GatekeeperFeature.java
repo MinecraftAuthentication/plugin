@@ -88,7 +88,7 @@ public class GatekeeperFeature extends Feature {
 
         if (service.getConfig().dget("Gatekeeper.Bypass").children().anyMatch(dynamic -> {
             String value = dynamic.convert().intoString();
-            return value.equals(account.getUUID().toString()) || value.equals(account.getName());
+            return value.equalsIgnoreCase(account.getUUID().toString()) || value.equalsIgnoreCase(account.getName());
         })) {
             service.getLogger().info("[Gatekeeper] " + account + " is bypassing login requirements because they're listed as a bypass player");
             return new GatekeeperResult(GatekeeperResult.Type.BYPASSED);
