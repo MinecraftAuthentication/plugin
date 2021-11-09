@@ -78,8 +78,21 @@ public class GatekeeperFeature extends Feature {
         reload();
     }
 
-    public @NotNull GatekeeperResult verify(MinecraftAccount account) {
+    public @NotNull GatekeeperResult verify(MinecraftAccount account, boolean playerIsOp) {
         if (service.getServerToken() == null || expressions.size() == 0) return new GatekeeperResult(GatekeeperResult.Type.NOT_ENABLED);
+
+        if (service.getConfig().getBooleanElse("Gatekeeper.OP bypass", true) && playerIsOp) {
+            service.getLogger().info("[Gatekeeper] " + account + " is bypassing login requirements because they're a server operator");
+            return new GatekeeperResult(GatekeeperResult.Type.BYPASSED);
+        }
+
+        if (service.getConfig().dget("Gatekeeper.Bypass").children().anyMatch(dynamic -> {
+            String value = dynamic.convert().intoString();
+            return value.equals(account.getUUID().toString()) || value.equals(account.getName());
+        })) {
+            service.getLogger().info("[Gatekeeper] " + account + " is bypassing login requirements because they're listed as a bypass player");
+            return new GatekeeperResult(GatekeeperResult.Type.BYPASSED);
+        }
 
         try {
             if (!expressionLock.tryLock(5, TimeUnit.SECONDS))
@@ -91,7 +104,7 @@ public class GatekeeperFeature extends Feature {
 
                 for (Expression expression : expressions) {
                     if (expression.eval().compareTo(BigDecimal.ONE) == 0) {
-                        service.getLogger().info("[Gatekeeper] Minecraft account " + account.getUUID() + " is being allowed via [" + expression.getOriginalExpression() + "]");
+                        service.getLogger().info("[Gatekeeper] " + account + " is being allowed via [" + expression.getOriginalExpression() + "]");
                         allowed = true;
                         break;
                     }
@@ -100,7 +113,7 @@ public class GatekeeperFeature extends Feature {
                 if (allowed) {
                     return new GatekeeperResult(GatekeeperResult.Type.ALLOWED);
                 } else {
-                    service.getLogger().info("[Gatekeeper] Denying Minecraft account " + account.getUUID() + ", no conditions were successful");
+                    service.getLogger().info("[Gatekeeper] Denying " + account + ", no conditions were successful");
                 }
             } finally {
                 expressionLock.unlock();

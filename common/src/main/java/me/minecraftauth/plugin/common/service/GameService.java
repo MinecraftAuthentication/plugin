@@ -54,7 +54,7 @@ public class GameService {
     }
 
     public void handleLoginEvent(PlayerLoginEvent event) throws LookupException {
-        GatekeeperResult gatekeeperResult = gatekeeperFeature.verify(new MinecraftAccount(event.getUuid()));
+        GatekeeperResult gatekeeperResult = gatekeeperFeature.verify(new MinecraftAccount(event.getUuid(), event.getName()), event.isOp());
 
         if (gatekeeperResult.getType().willDenyLogin()) {
             event.disallow(gatekeeperResult.getMessage());

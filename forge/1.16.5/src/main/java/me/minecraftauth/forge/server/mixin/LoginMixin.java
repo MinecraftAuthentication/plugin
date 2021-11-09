@@ -45,11 +45,6 @@ public abstract class LoginMixin {
         if (returnedMessage.getReturnValue() == null) {
 //            System.out.println("Player " + profile.getName() + "[" + profile.getId() + "] is logging in @ " + address);
 
-            if (server.getPlayerList().isOp(profile)) {
-                MinecraftAuthMod.getLogger().info("[Gatekeeper] Player " + profile.getName() + " is bypassing login requirements because they're a server operator");
-                return;
-            }
-
             try {
                 MinecraftAuthMod.getInstance().getService().handleLoginEvent(new PlayerLoginEvent(
                         profile.getId(),

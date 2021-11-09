@@ -43,7 +43,8 @@ public class GatekeeperResult {
 
         NOT_ENABLED,
         DENIED(true),
-        ALLOWED;
+        ALLOWED,
+        BYPASSED;
 
         private final boolean willDenyLogin;
 
