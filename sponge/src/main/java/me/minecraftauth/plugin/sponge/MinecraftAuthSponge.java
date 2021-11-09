@@ -71,7 +71,7 @@ public class MinecraftAuthSponge {
                     .withConfig(config)
                     .withLogger(new SpongeLogger(config, logger))
                     .build();
-        } catch (ParseException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
             return;
         }

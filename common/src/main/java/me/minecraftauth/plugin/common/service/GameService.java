@@ -27,6 +27,8 @@ import me.minecraftauth.plugin.common.abstracted.event.PlayerLoginEvent;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperResult;
 
+import java.io.IOException;
+
 public class GameService {
 
     @Getter private final DynamicConfig config;
@@ -34,7 +36,7 @@ public class GameService {
     @Getter private final GatekeeperFeature gatekeeperFeature;
     @Getter private String serverToken;
 
-    private GameService(DynamicConfig config, Logger logger) {
+    private GameService(DynamicConfig config, Logger logger) throws IOException, ParseException {
         this.config = config;
         this.logger = logger;
         this.gatekeeperFeature = new GatekeeperFeature(this);
@@ -43,12 +45,13 @@ public class GameService {
         logger.info("Minecraft Authentication service ready");
     }
 
-    public void reload() {
+    public void reload() throws IOException, ParseException {
+        config.loadAll();
         Dynamic authenticationDynamic = config.dget("Authentication");
         serverToken = authenticationDynamic.isPresent() ? authenticationDynamic.convert().intoString() : null;
     }
 
-    public void fullReload() {
+    public void fullReload() throws IOException, ParseException {
         reload();
         gatekeeperFeature.reload();
     }
@@ -76,7 +79,7 @@ public class GameService {
             return this;
         }
 
-        public GameService build() throws ParseException {
+        public GameService build() throws IOException, ParseException {
             return new GameService(config, logger);
         }
 
