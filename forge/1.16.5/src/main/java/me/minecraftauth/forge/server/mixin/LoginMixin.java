@@ -16,7 +16,6 @@
 
 package me.minecraftauth.forge.server.mixin;
 
-import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import me.minecraftauth.forge.server.MinecraftAuthMod;
 import me.minecraftauth.lib.exception.LookupException;
@@ -24,6 +23,8 @@ import me.minecraftauth.plugin.common.abstracted.event.PlayerLoginEvent;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -57,10 +58,7 @@ public abstract class LoginMixin {
     }
 
     private IFormattableTextComponent errorComponent(String message) {
-        JsonObject componentJson = new JsonObject();
-        componentJson.addProperty("text", message);
-        componentJson.addProperty("color", "red");
-        return ITextComponent.Serializer.fromJson(componentJson);
+        return new StringTextComponent(message).withStyle(TextFormatting.RED);
     }
 
 }
