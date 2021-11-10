@@ -97,28 +97,21 @@ public class GatekeeperFeature extends Feature {
         try {
             if (!expressionLock.tryLock(5, TimeUnit.SECONDS))
                 return new GatekeeperResult(GatekeeperResult.Type.DENIED, "Unable to schedule verification, try again");
+            this.accountBeingEvaluated = account;
 
             try {
-                this.accountBeingEvaluated = account;
-                boolean allowed = false;
-
                 for (Expression expression : expressions) {
                     if (expression.eval().compareTo(BigDecimal.ONE) == 0) {
                         service.getLogger().info("[Gatekeeper] " + account + " is being allowed via [" + expression.getOriginalExpression() + "]");
-                        allowed = true;
-                        break;
+                        return new GatekeeperResult(GatekeeperResult.Type.ALLOWED);
                     }
-                }
-
-                if (allowed) {
-                    return new GatekeeperResult(GatekeeperResult.Type.ALLOWED);
-                } else {
-                    service.getLogger().info("[Gatekeeper] Denying " + account + ", no conditions were successful");
                 }
             } finally {
                 expressionLock.unlock();
             }
         } catch (InterruptedException ignored) {}
+
+        service.getLogger().info("[Gatekeeper] Denying " + account + ", no conditions were successful");
         return new GatekeeperResult(GatekeeperResult.Type.DENIED, kickMessage);
     }
 
