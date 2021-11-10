@@ -20,6 +20,7 @@ import github.scarsz.configuralize.DynamicConfig;
 import github.scarsz.configuralize.ParseException;
 import lombok.Getter;
 import me.minecraftauth.plugin.common.service.GameService;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ExtensionPoint;
@@ -45,6 +46,7 @@ public class MinecraftAuthMod {
 
     public MinecraftAuthMod() {
         MinecraftAuthMod.instance = this;
+        MinecraftForge.EVENT_BUS.register(this);
 
         // inform mod loader that this is a server-only mod and isn't required on clients
         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
