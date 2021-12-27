@@ -14,17 +14,17 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "1.16.5"
+version = "1.18.1"
 group = "me.minecraftauth"
 archivesBaseName = "${modid}"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '17'
 
 minecraft {
     // snapshot   YYYYMMDD   Snapshot are built nightly.
     // stable     #          Stables are built at the discretion of the MCP team.
     // official   MCVersion  Official field/method names from Mojang mapping files
-    mappings channel: "official", version: "1.16.5"
+    mappings channel: 'official', version: '1.18.1'
     //makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     //accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -52,8 +52,8 @@ repositories{
 
 dependencies {
     shaded project(':common')
-    minecraft "net.minecraftforge:forge:1.16.5-36.2.0"
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.8'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 sourceSets {
