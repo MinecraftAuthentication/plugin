@@ -27,15 +27,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build common library
-        run: ./gradlew common:build
+        run: ./gradlew --no-daemon common:build
       - name: Build Bukkit plugin
-        run: ./gradlew bukkit:build
+        run: ./gradlew --no-daemon bukkit:build
       - name: Build Sponge plugin
-        run: ./gradlew sponge:build
+        run: ./gradlew --no-daemon sponge:build
       - name: Build Forge 1.16.5 mod
-        run: ./gradlew forge:1.16.5:build
+        run: ./gradlew --no-daemon forge:1.16.5:build
       - name: Build Forge 1.18.1 mod
-        run: ./gradlew forge:1.18.1:build
+        run: ./gradlew --no-daemon forge:1.18.1:build
       - name: Upload artifacts
         uses: eine/tip@master
         with:
