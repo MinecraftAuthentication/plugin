@@ -17,6 +17,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: gradle
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
@@ -25,8 +26,16 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build
-        run: ./gradlew build
+      - name: Build common library
+        run: ./gradlew common:build
+      - name: Build Bukkit plugin
+        run: ./gradlew bukkit:build
+      - name: Build Sponge plugin
+        run: ./gradlew sponge:build
+      - name: Build Forge 1.16.5 mod
+        run: ./gradlew forge:1.16.5:build
+      - name: Build Forge 1.18.1 mod
+        run: ./gradlew forge:1.18.1:build
       - name: Upload artifacts
         uses: eine/tip@master
         with:
