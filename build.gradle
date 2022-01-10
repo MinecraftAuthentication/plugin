@@ -38,6 +38,8 @@ subprojects {
     shadowJar {
         configurations = [project.configurations.shaded]
         relocate 'github.scarsz.configuralize', 'me.minecraftauth.config'
+        relocate 'com.udojava.evalex', 'me.minecraftauth.lib.evalex'
+        relocate 'com.github.benmanes.caffeine', 'me.minecraftauth.lib.caffeine'
 
         //noinspection GroovyAssignabilityCheck
         archiveClassifier = null
