@@ -9,6 +9,7 @@ Gatekeeper:
     - TwitchFollower()
     #- TwitchSubscriber(3)
     #- TwitchSubscriber() and not(DiscordRole("naughty"))
+    #- GlimpseSponsor("minecraft")
     #- PatreonMember()
     #- PatreonMember("gold")
     #- DiscordRole(000000000000000000)

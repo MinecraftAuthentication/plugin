@@ -52,6 +52,7 @@ public class GatekeeperFeature extends Feature {
         Supplier<MinecraftAccount> supplier = () -> accountBeingEvaluated;
         this.functions.add(new DiscordRoleFunction(this, supplier));
         this.functions.add(new DiscordServerFunction(this, supplier));
+        this.functions.add(new GlimpseSponsorFunction(this, supplier));
         this.functions.add(new PatreonMemberFunction(this, supplier));
         this.functions.add(new TwitchFollowerFunction(this, supplier));
         this.functions.add(new TwitchSubscriberFunction(this, supplier));
