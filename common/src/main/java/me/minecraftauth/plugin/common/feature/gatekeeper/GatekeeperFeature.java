@@ -18,7 +18,6 @@ package me.minecraftauth.plugin.common.feature.gatekeeper;
 
 import alexh.weak.Dynamic;
 import com.udojava.evalex.AbstractOperator;
-import com.udojava.evalex.Expression;
 import com.udojava.evalex.Operator;
 import lombok.Getter;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
@@ -28,9 +27,7 @@ import me.minecraftauth.plugin.common.service.GameService;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
@@ -38,7 +35,7 @@ import java.util.function.Supplier;
 public class GatekeeperFeature extends Feature {
 
     @Getter private final GameService service;
-    @Getter private final Set<Expression> expressions = new HashSet<>();
+    @Getter private final Set<Expression> expressions = new TreeSet<>(Comparator.comparingInt(value -> -value.successCount));
     @Getter private final Set<Operator> operators = new HashSet<>();
     @Getter private final Set<AbstractFunction> functions = new HashSet<>();
     @Getter private String kickMessage = null;
@@ -103,6 +100,7 @@ public class GatekeeperFeature extends Feature {
             for (Expression expression : expressions) {
                 if (expression.eval().compareTo(BigDecimal.ONE) == 0) {
                     service.getLogger().info("[Gatekeeper] " + account + " is being allowed via [" + expression.getOriginalExpression() + "]");
+                    expression.incrementSuccessCount();
                     return new GatekeeperResult(GatekeeperResult.Type.ALLOWED);
                 }
             }
