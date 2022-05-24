@@ -28,8 +28,8 @@ jobs:
         run: ./gradlew --no-daemon sponge:build
       - name: Build Forge 1.16.5 mod
         run: ./gradlew --no-daemon forge:1.16.5:build
-      - name: Build Forge 1.18.1 mod
-        run: ./gradlew --no-daemon forge:1.18.1:build
+      - name: Build Forge 1.18.2 mod
+        run: ./gradlew --no-daemon forge:1.18.2:build
       - name: Upload artifacts
         uses: eine/tip@master
         with:
