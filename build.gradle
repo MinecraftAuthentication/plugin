@@ -59,10 +59,10 @@ subprojects {
         archiveClassifier = 'javadoc'
     }
 
-    artifacts {
-        archives sourcesJar
-        archives javadocJar
-    }
+//    artifacts {
+//        archives sourcesJar
+//        archives javadocJar
+//    }
 
     license {
         header = rootProject.file('LICENSE_HEADER')
