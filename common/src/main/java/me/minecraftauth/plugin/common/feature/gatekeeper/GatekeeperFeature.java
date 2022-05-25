@@ -35,7 +35,7 @@ import java.util.function.Supplier;
 public class GatekeeperFeature extends Feature {
 
     @Getter private final GameService service;
-    @Getter private final Set<Expression> expressions = new TreeSet<>(Comparator.comparingInt(value -> -value.successCount));
+    @Getter private final List<Expression> expressions = new LinkedList<>();
     @Getter private final Set<Operator> operators = new HashSet<>();
     @Getter private final Set<AbstractFunction> functions = new HashSet<>();
     @Getter private String kickMessage = null;
@@ -97,12 +97,15 @@ public class GatekeeperFeature extends Feature {
                 return new GatekeeperResult(GatekeeperResult.Type.DENIED, "Unable to schedule verification, try again");
             this.accountBeingEvaluated = account;
 
+            boolean first = true;
             for (Expression expression : expressions) {
                 if (expression.eval().compareTo(BigDecimal.ONE) == 0) {
                     service.getLogger().info("[Gatekeeper] " + account + " is being allowed via [" + expression.getOriginalExpression() + "]");
                     expression.incrementSuccessCount();
+                    if (!first) expressions.sort(Comparator.comparingInt(value -> -value.successCount));
                     return new GatekeeperResult(GatekeeperResult.Type.ALLOWED);
                 }
+                first = false;
             }
         } catch (InterruptedException ignored) {
         } finally {
