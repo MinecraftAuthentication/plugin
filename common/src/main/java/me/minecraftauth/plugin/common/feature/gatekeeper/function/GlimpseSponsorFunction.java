@@ -33,9 +33,11 @@ public class GlimpseSponsorFunction extends AbstractFunction {
 
     @Override
     public Expression.LazyNumber lazyEval(List<Expression.LazyNumber> lazyParams) {
-        return VALUE_CACHE.get("GlimpseSponsorFunction" + getAccount().getUUID(), s -> {
+        String levelName = lazyParams.size() >= 1 ? lazyParams.get(0).getString() : null;
+
+        return VALUE_CACHE.get("GlimpseSponsorFunction" + getAccount().getUUID() + (levelName != null ? levelName : ""), s -> {
             try {
-                return AuthService.isSubscribedGlimpse(getGatekeeper().getService().getServerToken(), getAccount().getUUID()) ? TRUE : FALSE;
+                return AuthService.isSubscribedGlimpse(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), levelName) ? TRUE : FALSE;
             } catch (LookupException e) {
                 e.printStackTrace();
                 return FALSE;
