@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 public class GlimpseSponsorFunction extends AbstractFunction {
 
     public GlimpseSponsorFunction(GatekeeperFeature gatekeeper, Supplier<MinecraftAccount> accountSupplier) {
-        super(gatekeeper, "GlimpseSponsor", 0, accountSupplier);
+        super(gatekeeper, "GlimpseSponsor", 1, accountSupplier);
     }
 
     @Override
