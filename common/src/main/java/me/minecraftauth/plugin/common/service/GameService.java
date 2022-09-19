@@ -20,6 +20,7 @@ import alexh.weak.Dynamic;
 import github.scarsz.configuralize.DynamicConfig;
 import github.scarsz.configuralize.ParseException;
 import lombok.Getter;
+import me.minecraftauth.lib.Environment;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.abstracted.Logger;
@@ -28,8 +29,16 @@ import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperResult;
 
 import java.io.IOException;
+import java.time.Instant;
 
 public class GameService {
+
+    static {
+        if (Instant.now().isBefore(Instant.parse("2022-09-25T00:00:00.00Z"))) {
+            Environment.HOST = "https://auth.scarsz.me/";
+        }
+        System.out.println(Environment.HOST);
+    }
 
     @Getter private final DynamicConfig config;
     @Getter private final Logger logger;
