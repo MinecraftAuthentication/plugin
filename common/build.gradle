@@ -9,7 +9,7 @@ configurations {
 dependencies {
     compileOnly 'org.jetbrains:annotations:22.0.0'
 
-    shaded 'me.minecraftauth:lib:1.1.0'
+    shaded 'me.minecraftauth:lib:1.1.1'
     shaded 'github.scarsz:configuralize:1.4.0'
     shaded 'com.github.ben-manes.caffeine:caffeine:2.9.1'
     shaded 'com.udojava:EvalEx:2.7'
