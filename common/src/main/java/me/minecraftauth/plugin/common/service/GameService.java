@@ -37,7 +37,6 @@ public class GameService {
         if (Instant.now().isBefore(Instant.parse("2022-09-25T00:00:00.00Z"))) {
             Environment.HOST = "https://auth.scarsz.me/";
         }
-        System.out.println(Environment.HOST);
     }
 
     @Getter private final DynamicConfig config;
