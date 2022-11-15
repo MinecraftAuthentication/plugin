@@ -18,7 +18,7 @@ version = "1.18.2"
 group = "me.minecraftauth"
 archivesBaseName = "${modid}"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '17'
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
     // snapshot   YYYYMMDD   Snapshot are built nightly.

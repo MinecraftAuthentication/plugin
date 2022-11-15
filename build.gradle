@@ -6,14 +6,15 @@ plugins {
 
 version = '1.0-SNAPSHOT'
 
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'io.freefair.lombok'
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'org.cadixdev.licenser'
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
     generateLombokConfig.enabled = false
 
