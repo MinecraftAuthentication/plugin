@@ -121,6 +121,7 @@ public class GatekeeperFeature extends Feature {
         Dynamic kickMessageDynamic = service.getConfig().dget("Gatekeeper.Kick message");
         kickMessage = kickMessageDynamic.isPresent() ? kickMessageDynamic.convert().intoString() : null;
 
+        expressions.clear();
         service.getConfig().dget("Gatekeeper.Conditions").children().forEach(d -> {
             Expression expression = new Expression(d.asString());
             for (AbstractFunction function : functions) expression.addLazyFunction(function);
