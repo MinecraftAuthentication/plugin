@@ -33,7 +33,7 @@ jobs:
       - name: Build Forge 1.19.3 mod
         run: ./gradlew --no-daemon forge:1.19.3:build
       - name: Upload artifacts
-        uses: eine/tip@master
+        uses: pyTooling/Actions/releaser@r0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: snapshot
