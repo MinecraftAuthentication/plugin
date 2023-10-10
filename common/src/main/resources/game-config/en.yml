@@ -3,7 +3,7 @@ Authentication: token
 Gatekeeper:
   Bypass:
     - d7c1db4d-e57b-488b-b8bc-4462fe49a3e8 # Scarsz
-  OP bypass: true
+  Admin bypass: true
   Kick message: "You must be following me on Twitch to join my Minecraft server!"
   Conditions:
     - TwitchFollower()

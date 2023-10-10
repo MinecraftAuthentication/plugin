@@ -79,8 +79,8 @@ public class GatekeeperFeature extends Feature {
     public @NotNull GatekeeperResult verify(MinecraftAccount account, boolean playerIsOp) {
         if (service.getServerToken() == null || expressions.size() == 0) return new GatekeeperResult(GatekeeperResult.Type.NOT_ENABLED);
 
-        if (service.getConfig().getBooleanElse("Gatekeeper.OP bypass", true) && playerIsOp) {
-            service.getLogger().info("[Gatekeeper] " + account + " is bypassing login requirements because they're a server operator");
+        if (playerIsAdmin && service.getConfig().getBooleanElse("Gatekeeper.Admin bypass", service.getConfig().getBooleanElse("Gatekeeper.OP bypass", true))) {
+            service.getLogger().info("[Gatekeeper] " + account + " is bypassing login requirements because they're a server admin");
             return new GatekeeperResult(GatekeeperResult.Type.BYPASSED);
         }
 
