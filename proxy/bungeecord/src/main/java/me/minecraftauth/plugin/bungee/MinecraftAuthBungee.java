@@ -16,18 +16,46 @@
 
 package me.minecraftauth.plugin.bungee;
 
+import github.scarsz.configuralize.DynamicConfig;
+import github.scarsz.configuralize.ParseException;
+import lombok.Getter;
+import me.minecraftauth.plugin.common.service.AuthenticationService;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
+
+import java.io.File;
+import java.io.IOException;
 
 public final class MinecraftAuthBungee extends Plugin {
 
-    @Override
-    public void onEnable() {
-        // Plugin startup logic
-    }
+    @Getter private static MinecraftAuthBungee instance;
+    @Getter private AuthenticationService service;
 
     @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+    public void onEnable() {
+        MinecraftAuthBungee.instance = this;
+
+        DynamicConfig config = new DynamicConfig();
+        try {
+            config.addSource(MinecraftAuthBungee.class, "game-config", new File(getDataFolder(), "config.yml"));
+            config.saveAllDefaults();
+            config.loadAll();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        try {
+            service = new AuthenticationService.Builder()
+                    .withConfig(config)
+                    .withLogger(new BungeeLogger(config, getLogger()))
+                    .build();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new BungeeEventsListener());
     }
 
 }
