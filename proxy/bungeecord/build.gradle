@@ -16,7 +16,7 @@ dependencies {
 }
 
 jar {
-    archivesBaseName = 'MinecraftAuth-Bungee'
+    archivesBaseName = 'MinecraftAuth-BungeeCord'
 }
 
 processResources {
