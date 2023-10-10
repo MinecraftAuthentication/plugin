@@ -17,27 +17,62 @@
 package me.minecraftauth.plugin.velocity;
 
 import com.google.inject.Inject;
-import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import com.velocitypowered.api.proxy.ProxyServer;
+import github.scarsz.configuralize.DynamicConfig;
+import github.scarsz.configuralize.ParseException;
+import lombok.Getter;
+import me.minecraftauth.plugin.common.service.AuthenticationService;
 import org.slf4j.Logger;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+
 @Plugin(
-        id = "plugin-velocity",
-        name = "Plugin",
-        version = "1.0-SNAPSHOT",
-        description = "Authenticate players in your Minecraft server to various services",
+        id = "minecraftauth",
+        name = "MinecraftAuth",
         url = "https://minecraftauth.me",
+        description = "Authenticate players in your Minecraft server to various services",
         authors = {"MinecraftAuth"}
 )
 public class MinecraftAuthVelocity {
 
-    @Inject
-    private Logger logger;
+    @Getter private static MinecraftAuthVelocity instance;
+    @Getter private AuthenticationService service;
+
+    @Inject private Logger logger;
+    @Inject private ProxyServer server;
+    @DataDirectory Path dataDirectory;
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
+        MinecraftAuthVelocity.instance = this;
 
+        DynamicConfig config = new DynamicConfig();
+        try {
+            config.addSource(MinecraftAuthVelocity.class, "game-config", new File(dataDirectory.toFile(), "MinecraftAuth.yml"));
+            config.saveAllDefaults();
+            config.loadAll();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        try {
+            service = new AuthenticationService.Builder()
+                    .withConfig(config)
+                    .withLogger(new VelocityLogger(config, logger))
+                    .build();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        server.getEventManager().register(this, new VelocityEventsListener());
     }
 
 }
