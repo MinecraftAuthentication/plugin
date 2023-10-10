@@ -1,30 +1,18 @@
-plugins {
-//    id 'net.kyori.blossom' version '1.1.0' // Not compatible with Gradle 7 currently
-}
-
 repositories {
     maven {
-        url 'https://repo.velocitypowered.com/releases/'
-    }
-    maven {
-        url 'https://libraries.minecraft.net/'
-    }
-    maven {
-        url 'https://repo.spongepowered.org/maven/'
+        url 'https://repo.papermc.io/repository/maven-public/'
     }
 }
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(11) // velocity requires 11+
 
 dependencies {
     implementation project(':common')
 
-    compileOnly 'com.velocitypowered:velocity-api:1.1.0'
+    compileOnly 'com.velocitypowered:velocity-api:3.2.0-SNAPSHOT'
+    annotationProcessor 'com.velocitypowered:velocity-api:3.2.0-SNAPSHOT'
 }
 
 jar {
     archivesBaseName = 'MinecraftAuth-Velocity'
 }
-
-//blossom {
-//    def mainClass = "src/main/java/me/minecraftauth/plugin/velocity/MinecraftAuthVelocity.java"
-//    replaceToken '@VERSION@', project.version, mainClass
-//}
