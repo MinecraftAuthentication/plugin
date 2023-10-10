@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 
 public abstract class AbstractFunction extends AbstractLazyFunction {
 
-    static final Cache<String, Expression.LazyNumber> VALUE_CACHE = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).build();
+    private static final Cache<String, Expression.LazyNumber> VALUE_CACHE = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).build();
 
     public static final Expression.LazyNumber TRUE = new Expression.LazyNumber() {
         @Override
@@ -63,6 +63,10 @@ public abstract class AbstractFunction extends AbstractLazyFunction {
         super(name, numParams, true);
         this.gatekeeper = gatekeeper;
         this.accountSupplier = accountSupplier;
+    }
+
+    Expression.LazyNumber cache(String function, String account, String data, Supplier<Expression.LazyNumber> compute) {
+        return VALUE_CACHE.get(function + "." + account + (data != null ? "." + data : ""), s -> compute.get());
     }
 
     public MinecraftAccount getAccount() {

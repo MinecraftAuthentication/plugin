@@ -23,7 +23,7 @@ import lombok.Getter;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.plugin.common.feature.Feature;
 import me.minecraftauth.plugin.common.feature.gatekeeper.function.*;
-import me.minecraftauth.plugin.common.service.GameService;
+import me.minecraftauth.plugin.common.service.AuthenticationService;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -34,16 +34,16 @@ import java.util.function.Supplier;
 
 public class GatekeeperFeature extends Feature {
 
-    @Getter private final GameService service;
+    @Getter private final AuthenticationService service;
     @Getter private final List<Expression> expressions = new LinkedList<>();
     @Getter private final Set<Operator> operators = new HashSet<>();
     @Getter private final Set<AbstractFunction> functions = new HashSet<>();
     @Getter private String kickMessage = null;
 
-    private MinecraftAccount accountBeingEvaluated = null;
     private final ReentrantLock expressionLock = new ReentrantLock();
+    private MinecraftAccount accountBeingEvaluated = null;
 
-    public GatekeeperFeature(GameService service) {
+    public GatekeeperFeature(AuthenticationService service) {
         this.service = service;
 
         Supplier<MinecraftAccount> supplier = () -> accountBeingEvaluated;
@@ -76,11 +76,11 @@ public class GatekeeperFeature extends Feature {
         reload();
     }
 
-    public @NotNull GatekeeperResult verify(MinecraftAccount account, boolean playerIsOp) {
-        if (service.getServerToken() == null || expressions.size() == 0) return new GatekeeperResult(GatekeeperResult.Type.NOT_ENABLED);
+    public @NotNull GatekeeperResult verify(MinecraftAccount account, boolean playerIsAdmin) {
+        if (service.getServerToken() == null || expressions.isEmpty()) return new GatekeeperResult(GatekeeperResult.Type.NOT_ENABLED);
 
-        if (service.getConfig().getBooleanElse("Gatekeeper.OP bypass", true) && playerIsOp) {
-            service.getLogger().info("[Gatekeeper] " + account + " is bypassing login requirements because they're a server operator");
+        if (playerIsAdmin && service.getConfig().getBooleanElse("Gatekeeper.Admin bypass", service.getConfig().getBooleanElse("Gatekeeper.OP bypass", true))) {
+            service.getLogger().info("[Gatekeeper] " + account + " is bypassing login requirements because they're a server admin");
             return new GatekeeperResult(GatekeeperResult.Type.BYPASSED);
         }
 

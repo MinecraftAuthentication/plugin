@@ -38,7 +38,7 @@ public class TwitchSubscriberFunction extends AbstractFunction {
         if (lazyParams.size() >= 1) tierRaw = lazyParams.get(0).eval().intValueExact();
         SubTier tier = SubTier.level(tierRaw);
 
-        return VALUE_CACHE.get("TwitchSubscriberFunction" + getAccount().getUUID() + tier.getValue(), s -> {
+        return cache(getClass().getSimpleName(), getAccount().getUUID().toString(), String.valueOf(tier.getValue()), () -> {
             try {
                 return AuthService.isSubscribedTwitch(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), tier) ? TRUE : FALSE;
             } catch (LookupException e) {

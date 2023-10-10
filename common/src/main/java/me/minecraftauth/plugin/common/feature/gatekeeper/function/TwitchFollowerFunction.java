@@ -33,7 +33,7 @@ public class TwitchFollowerFunction extends AbstractFunction {
 
     @Override
     public Expression.LazyNumber lazyEval(List<Expression.LazyNumber> lazyParams) {
-        return VALUE_CACHE.get("TwitchFollowerFunction" + getAccount().getUUID(), s -> {
+        return cache(getClass().getSimpleName(), getAccount().getUUID().toString(), null, () -> {
             try {
                 return AuthService.isFollowingTwitch(getGatekeeper().getService().getServerToken(), getAccount().getUUID()) ? TRUE : FALSE;
             } catch (LookupException e) {
