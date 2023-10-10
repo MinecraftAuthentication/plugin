@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MinecraftAuth.me
+ * Copyright 2021-2023 MinecraftAuth.me
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,22 @@
 
 package me.minecraftauth.plugin.common.abstracted.event;
 
+import lombok.Getter;
+
 import java.util.UUID;
 
 public abstract class PlayerLoginEvent implements Event {
 
-    private final UUID uuid;
-    private final String name;
+    @Getter private final UUID uuid;
+    @Getter private final String name;
+    @Getter private final boolean op;
 
-    public PlayerLoginEvent(UUID uuid, String name) {
+    public PlayerLoginEvent(UUID uuid, String name, boolean op) {
         this.uuid = uuid;
         this.name = name;
+        this.op = op;
     }
 
     public abstract void disallow(String message);
-
-    public UUID getUuid() {
-        return uuid;
-    }
-    public String getName() {
-        return name;
-    }
 
 }

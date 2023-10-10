@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MinecraftAuth.me
+ * Copyright 2021-2023 MinecraftAuth.me
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,12 +37,14 @@ public class DiscordRoleFunction extends AbstractFunction {
         String role = lazyParams.get(0).getString();
         Objects.requireNonNull(role, "No role ID given for " + getClass().getSimpleName());
 
-        try {
-            return AuthService.isDiscordRolePresent(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), role) ? TRUE : FALSE;
-        } catch (LookupException e) {
-            e.printStackTrace();
-            return FALSE;
-        }
+        return VALUE_CACHE.get("DiscordRoleFunction" + getAccount().getUUID() + role, r -> {
+            try {
+                return AuthService.isDiscordRolePresent(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), role) ? TRUE : FALSE;
+            } catch (LookupException e) {
+                e.printStackTrace();
+                return FALSE;
+            }
+        });
     }
 
 }

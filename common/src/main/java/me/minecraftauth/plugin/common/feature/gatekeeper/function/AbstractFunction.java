@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MinecraftAuth.me
+ * Copyright 2021-2023 MinecraftAuth.me
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package me.minecraftauth.plugin.common.feature.gatekeeper.function;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.udojava.evalex.AbstractLazyFunction;
 import com.udojava.evalex.Expression;
 import lombok.Getter;
@@ -23,9 +25,12 @@ import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public abstract class AbstractFunction extends AbstractLazyFunction {
+
+    static final Cache<String, Expression.LazyNumber> VALUE_CACHE = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).build();
 
     public static final Expression.LazyNumber TRUE = new Expression.LazyNumber() {
         @Override

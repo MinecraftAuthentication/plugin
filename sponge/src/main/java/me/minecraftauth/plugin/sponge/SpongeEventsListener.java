@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MinecraftAuth.me
+ * Copyright 2021-2023 MinecraftAuth.me
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,8 @@ public class SpongeEventsListener {
         try {
             MinecraftAuthSponge.getInstance().getService().handleLoginEvent(new PlayerLoginEvent(
                     event.getProfile().getUniqueId(),
-                    event.getProfile().getName().orElse("")
+                    event.getProfile().getName().orElse(""),
+                    false // sponge has no concept of "ops"
             ) {
                 @Override
                 public void disallow(String message) {

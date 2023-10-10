@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MinecraftAuth.me
+ * Copyright 2021-2023 MinecraftAuth.me
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package me.minecraftauth.plugin.common.feature.gatekeeper;
 
 import alexh.weak.Dynamic;
 import com.udojava.evalex.AbstractOperator;
-import com.udojava.evalex.Expression;
 import com.udojava.evalex.Operator;
 import lombok.Getter;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
@@ -28,9 +27,7 @@ import me.minecraftauth.plugin.common.service.GameService;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
@@ -38,7 +35,7 @@ import java.util.function.Supplier;
 public class GatekeeperFeature extends Feature {
 
     @Getter private final GameService service;
-    @Getter private final Set<Expression> expressions = new HashSet<>();
+    @Getter private final List<Expression> expressions = new LinkedList<>();
     @Getter private final Set<Operator> operators = new HashSet<>();
     @Getter private final Set<AbstractFunction> functions = new HashSet<>();
     @Getter private String kickMessage = null;
@@ -52,6 +49,7 @@ public class GatekeeperFeature extends Feature {
         Supplier<MinecraftAccount> supplier = () -> accountBeingEvaluated;
         this.functions.add(new DiscordRoleFunction(this, supplier));
         this.functions.add(new DiscordServerFunction(this, supplier));
+        this.functions.add(new GlimpseSponsorFunction(this, supplier));
         this.functions.add(new PatreonMemberFunction(this, supplier));
         this.functions.add(new TwitchFollowerFunction(this, supplier));
         this.functions.add(new TwitchSubscriberFunction(this, supplier));
@@ -78,34 +76,43 @@ public class GatekeeperFeature extends Feature {
         reload();
     }
 
-    public @NotNull GatekeeperResult verify(MinecraftAccount account) {
+    public @NotNull GatekeeperResult verify(MinecraftAccount account, boolean playerIsOp) {
         if (service.getServerToken() == null || expressions.size() == 0) return new GatekeeperResult(GatekeeperResult.Type.NOT_ENABLED);
+
+        if (service.getConfig().getBooleanElse("Gatekeeper.OP bypass", true) && playerIsOp) {
+            service.getLogger().info("[Gatekeeper] " + account + " is bypassing login requirements because they're a server operator");
+            return new GatekeeperResult(GatekeeperResult.Type.BYPASSED);
+        }
+
+        if (service.getConfig().dget("Gatekeeper.Bypass").children().anyMatch(dynamic -> {
+            String value = dynamic.convert().intoString();
+            return value.equalsIgnoreCase(account.getUUID().toString()) || value.equalsIgnoreCase(account.getName());
+        })) {
+            service.getLogger().info("[Gatekeeper] " + account + " is bypassing login requirements because they're listed as a bypass player");
+            return new GatekeeperResult(GatekeeperResult.Type.BYPASSED);
+        }
 
         try {
             if (!expressionLock.tryLock(5, TimeUnit.SECONDS))
                 return new GatekeeperResult(GatekeeperResult.Type.DENIED, "Unable to schedule verification, try again");
+            this.accountBeingEvaluated = account;
 
-            try {
-                this.accountBeingEvaluated = account;
-                boolean allowed = false;
-
-                for (Expression expression : expressions) {
-                    if (expression.eval().compareTo(BigDecimal.ONE) == 0) {
-                        service.getLogger().info("[Gatekeeper] Minecraft account " + account.getUUID() + " is being allowed via [" + expression.getOriginalExpression() + "]");
-                        allowed = true;
-                        break;
-                    }
-                }
-
-                if (allowed) {
+            boolean first = true;
+            for (Expression expression : expressions) {
+                if (expression.eval().compareTo(BigDecimal.ONE) == 0) {
+                    service.getLogger().info("[Gatekeeper] " + account + " is being allowed via [" + expression.getOriginalExpression() + "]");
+                    expression.incrementSuccessCount();
+                    if (!first) expressions.sort(Comparator.comparingInt(value -> -value.successCount));
                     return new GatekeeperResult(GatekeeperResult.Type.ALLOWED);
-                } else {
-                    service.getLogger().info("[Gatekeeper] Denying Minecraft account " + account.getUUID() + ", no conditions were successful");
                 }
-            } finally {
-                expressionLock.unlock();
+                first = false;
             }
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        } finally {
+            expressionLock.unlock();
+        }
+
+        service.getLogger().info("[Gatekeeper] Denying " + account + ", no conditions were successful");
         return new GatekeeperResult(GatekeeperResult.Type.DENIED, kickMessage);
     }
 
@@ -114,6 +121,7 @@ public class GatekeeperFeature extends Feature {
         Dynamic kickMessageDynamic = service.getConfig().dget("Gatekeeper.Kick message");
         kickMessage = kickMessageDynamic.isPresent() ? kickMessageDynamic.convert().intoString() : null;
 
+        expressions.clear();
         service.getConfig().dget("Gatekeeper.Conditions").children().forEach(d -> {
             Expression expression = new Expression(d.asString());
             for (AbstractFunction function : functions) expression.addLazyFunction(function);

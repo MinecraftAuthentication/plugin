@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MinecraftAuth.me
+ * Copyright 2021-2023 MinecraftAuth.me
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,12 +33,14 @@ public class YouTubeSubscriberFunction extends AbstractFunction {
 
     @Override
     public Expression.LazyNumber lazyEval(List<Expression.LazyNumber> lazyParams) {
-        try {
-            return AuthService.isSubscribedYouTube(getGatekeeper().getService().getServerToken(), getAccount().getUUID()) ? TRUE : FALSE;
-        } catch (LookupException e) {
-            e.printStackTrace();
-            return FALSE;
-        }
+        return VALUE_CACHE.get("YouTubeSubscriberFunction" + getAccount().getUUID(), s -> {
+            try {
+                return AuthService.isSubscribedYouTube(getGatekeeper().getService().getServerToken(), getAccount().getUUID()) ? TRUE : FALSE;
+            } catch (LookupException e) {
+                e.printStackTrace();
+                return FALSE;
+            }
+        });
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MinecraftAuth.me
+ * Copyright 2021-2023 MinecraftAuth.me
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,16 @@ import alexh.weak.Dynamic;
 import github.scarsz.configuralize.DynamicConfig;
 import github.scarsz.configuralize.ParseException;
 import lombok.Getter;
+import me.minecraftauth.lib.Environment;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.abstracted.Logger;
 import me.minecraftauth.plugin.common.abstracted.event.PlayerLoginEvent;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperResult;
+
+import java.io.IOException;
+import java.time.Instant;
 
 public class GameService {
 
@@ -34,7 +38,7 @@ public class GameService {
     @Getter private final GatekeeperFeature gatekeeperFeature;
     @Getter private String serverToken;
 
-    private GameService(DynamicConfig config, Logger logger) {
+    private GameService(DynamicConfig config, Logger logger) throws IOException, ParseException {
         this.config = config;
         this.logger = logger;
         this.gatekeeperFeature = new GatekeeperFeature(this);
@@ -43,18 +47,19 @@ public class GameService {
         logger.info("Minecraft Authentication service ready");
     }
 
-    public void reload() {
+    public void reload() throws IOException, ParseException {
+        config.loadAll();
         Dynamic authenticationDynamic = config.dget("Authentication");
         serverToken = authenticationDynamic.isPresent() ? authenticationDynamic.convert().intoString() : null;
     }
 
-    public void fullReload() {
+    public void fullReload() throws IOException, ParseException {
         reload();
         gatekeeperFeature.reload();
     }
 
     public void handleLoginEvent(PlayerLoginEvent event) throws LookupException {
-        GatekeeperResult gatekeeperResult = gatekeeperFeature.verify(new MinecraftAccount(event.getUuid()));
+        GatekeeperResult gatekeeperResult = gatekeeperFeature.verify(new MinecraftAccount(event.getUuid(), event.getName()), event.isOp());
 
         if (gatekeeperResult.getType().willDenyLogin()) {
             event.disallow(gatekeeperResult.getMessage());
@@ -76,7 +81,7 @@ public class GameService {
             return this;
         }
 
-        public GameService build() throws ParseException {
+        public GameService build() throws IOException, ParseException {
             return new GameService(config, logger);
         }
 

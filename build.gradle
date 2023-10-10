@@ -1,14 +1,12 @@
 plugins {
     id 'io.freefair.lombok' version '5.3.3.3'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
-    id 'org.cadixdev.licenser' version '0.6.0'
-}
-
-repositories {
-    mavenCentral()
+    id 'org.cadixdev.licenser' version '0.6.1'
 }
 
 version = '1.0-SNAPSHOT'
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
 subprojects {
     apply plugin: 'java'
@@ -16,10 +14,8 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'org.cadixdev.licenser'
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
-    version = rootProject.version
     generateLombokConfig.enabled = false
 
     repositories {
@@ -29,6 +25,11 @@ subprojects {
         }
     }
 
+    configurations {
+        shaded
+        implementation.extendsFrom(shaded)
+    }
+
     jar {
         // avoid needing to run licenseFormat & shadowJar when building
         dependsOn licenseFormat
@@ -36,10 +37,13 @@ subprojects {
     }
 
     shadowJar {
-        relocate 'github.scarsz.configuralize', 'me.minecraftauth.plugin.config'
+        configurations = [project.configurations.shaded]
+        relocate 'github.scarsz.configuralize', 'me.minecraftauth.config'
+        relocate 'com.udojava.evalex', 'me.minecraftauth.lib.evalex'
+        relocate 'com.github.benmanes.caffeine', 'me.minecraftauth.lib.caffeine'
 
         //noinspection GroovyAssignabilityCheck
-        archiveClassifier = ''
+        archiveClassifier = null
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {
@@ -56,18 +60,17 @@ subprojects {
         archiveClassifier = 'javadoc'
     }
 
-    artifacts {
-        archives sourcesJar
-        archives javadocJar
-    }
+//    artifacts {
+//        archives sourcesJar
+//        archives javadocJar
+//    }
 
     license {
         header = rootProject.file('LICENSE_HEADER')
         properties {
-            String inception = "2021"
+            String inception = '2021'
             String currentYear = Calendar.getInstance().get(Calendar.YEAR)
-
-            year = inception == currentYear ? currentYear : inception + "-" + currentYear
+            year = inception == currentYear ? currentYear : inception + '-' + currentYear
         }
         include '**/*.java' // only java files
     }

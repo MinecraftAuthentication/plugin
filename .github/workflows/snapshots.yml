@@ -12,27 +12,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/**gradle**') }}
-          restore-keys: ${{ runner.os }}-gradle
+          distribution: 'temurin'
+          java-version: '17'
+          cache: gradle
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build
-        run: ./gradlew build
+      - name: Build common library
+        run: ./gradlew --no-daemon common:build
+      - name: Build Bukkit plugin
+        run: ./gradlew --no-daemon bukkit:build
+      - name: Build Sponge plugin
+        run: ./gradlew --no-daemon sponge:build
+      - name: Build Forge 1.16.5 mod
+        run: ./gradlew --no-daemon forge:1.16.5:build
+      - name: Build Forge 1.18.2 mod
+        run: ./gradlew --no-daemon forge:1.18.2:build
+      - name: Build Forge 1.19.3 mod
+        run: ./gradlew --no-daemon forge:1.19.3:build
       - name: Upload artifacts
-        uses: eine/tip@master
+        uses: pyTooling/Actions/releaser@r0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: snapshot
           rm: true
           files: |
-            bukkit/build/libs/MinecraftAuth-Bukkit-*.jar
-            sponge/build/libs/MinecraftAuth-Sponge-*.jar
+            bukkit/build/libs/MinecraftAuth-Bukkit*.jar
+            sponge/build/libs/MinecraftAuth-Sponge*.jar
+            forge/*/build/libs/MinecraftAuth-Forge*.jar

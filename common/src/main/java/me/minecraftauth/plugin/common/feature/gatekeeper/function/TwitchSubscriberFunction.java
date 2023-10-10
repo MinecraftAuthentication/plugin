@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MinecraftAuth.me
+ * Copyright 2021-2023 MinecraftAuth.me
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,12 +38,14 @@ public class TwitchSubscriberFunction extends AbstractFunction {
         if (lazyParams.size() >= 1) tierRaw = lazyParams.get(0).eval().intValueExact();
         SubTier tier = SubTier.level(tierRaw);
 
-        try {
-            return AuthService.isSubscribedTwitch(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), tier) ? TRUE : FALSE;
-        } catch (LookupException e) {
-            e.printStackTrace();
-            return FALSE;
-        }
+        return VALUE_CACHE.get("TwitchSubscriberFunction" + getAccount().getUUID() + tier.getValue(), s -> {
+            try {
+                return AuthService.isSubscribedTwitch(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), tier) ? TRUE : FALSE;
+            } catch (LookupException e) {
+                e.printStackTrace();
+                return FALSE;
+            }
+        });
     }
 
 }

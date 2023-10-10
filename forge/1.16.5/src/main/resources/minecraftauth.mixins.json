@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "me.minecraftauth.forge.server.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "minecraftauth.refmap.json",
+  "server": [
+    "LoginMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

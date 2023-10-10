@@ -1,3 +1,17 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven {
+            name = 'MinecraftForge'
+            url = 'https://maven.minecraftforge.net/'
+        }
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+    }
+}
+
 rootProject.name = 'MinecraftAuthentication-Plugin'
 
-include 'common', 'bukkit', 'sponge', 'bungeecord', 'velocity'
+include 'common', 'bukkit', 'sponge', 'bungeecord', 'velocity', 'forge:1.16.5', 'forge:1.18.2', 'forge:1.19.3'

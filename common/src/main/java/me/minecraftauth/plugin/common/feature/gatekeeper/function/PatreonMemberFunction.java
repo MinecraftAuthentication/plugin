@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MinecraftAuth.me
+ * Copyright 2021-2023 MinecraftAuth.me
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,15 +33,16 @@ public class PatreonMemberFunction extends AbstractFunction {
 
     @Override
     public Expression.LazyNumber lazyEval(List<Expression.LazyNumber> lazyParams) {
-        String tier = null;
-        if (lazyParams.size() >= 1) tier = lazyParams.get(0).getString();
+        String tier = lazyParams.size() >= 1 ? lazyParams.get(0).getString() : null;
 
-        try {
-            return AuthService.isSubscribedPatreon(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), tier) ? TRUE : FALSE;
-        } catch (LookupException e) {
-            e.printStackTrace();
-            return FALSE;
-        }
+        return VALUE_CACHE.get("PatreonMemberFunction" + getAccount().getUUID() + (tier != null ? tier : ""), s -> {
+            try {
+                return AuthService.isSubscribedPatreon(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), tier) ? TRUE : FALSE;
+            } catch (LookupException e) {
+                e.printStackTrace();
+                return FALSE;
+            }
+        });
     }
 
 }

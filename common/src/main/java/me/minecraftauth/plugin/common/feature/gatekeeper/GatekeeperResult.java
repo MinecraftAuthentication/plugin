@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MinecraftAuth.me
+ * Copyright 2021-2023 MinecraftAuth.me
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,8 @@ public class GatekeeperResult {
 
         NOT_ENABLED,
         DENIED(true),
-        ALLOWED;
+        ALLOWED,
+        BYPASSED;
 
         private final boolean willDenyLogin;
 

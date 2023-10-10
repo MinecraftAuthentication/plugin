@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':common')
+    shaded project(':common')
     compileOnly 'org.spongepowered:spongeapi:7.3.0'
 }
 
