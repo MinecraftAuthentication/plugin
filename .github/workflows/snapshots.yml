@@ -23,15 +23,19 @@ jobs:
       - name: Build common library
         run: ./gradlew --no-daemon common:build
       - name: Build Bukkit plugin
-        run: ./gradlew --no-daemon bukkit:build
+        run: ./gradlew --no-daemon server:bukkit:build
       - name: Build Sponge plugin
-        run: ./gradlew --no-daemon sponge:build
+        run: ./gradlew --no-daemon server:sponge:build
       - name: Build Forge 1.16.5 mod
-        run: ./gradlew --no-daemon forge:1.16.5:build
+        run: ./gradlew --no-daemon server:forge:1.16.5:build
       - name: Build Forge 1.18.2 mod
-        run: ./gradlew --no-daemon forge:1.18.2:build
+        run: ./gradlew --no-daemon server:forge:1.18.2:build
       - name: Build Forge 1.19.3 mod
-        run: ./gradlew --no-daemon forge:1.19.3:build
+        run: ./gradlew --no-daemon server:forge:1.19.3:build
+      - name: Build BungeeCord plugin
+        run: ./gradlew --no-daemon proxy:bungeecord:build
+      - name: Build Velocity plugin
+        run: ./gradlew --no-daemon proxy:velocity:build
       - name: Upload artifacts
         uses: pyTooling/Actions/releaser@r0
         with:
