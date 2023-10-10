@@ -23,7 +23,7 @@ import lombok.Getter;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.plugin.common.feature.Feature;
 import me.minecraftauth.plugin.common.feature.gatekeeper.function.*;
-import me.minecraftauth.plugin.common.service.GameService;
+import me.minecraftauth.plugin.common.service.AuthenticationService;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 
 public class GatekeeperFeature extends Feature {
 
-    @Getter private final GameService service;
+    @Getter private final AuthenticationService service;
     @Getter private final List<Expression> expressions = new LinkedList<>();
     @Getter private final Set<Operator> operators = new HashSet<>();
     @Getter private final Set<AbstractFunction> functions = new HashSet<>();
@@ -43,7 +43,7 @@ public class GatekeeperFeature extends Feature {
     private MinecraftAccount accountBeingEvaluated = null;
     private final ReentrantLock expressionLock = new ReentrantLock();
 
-    public GatekeeperFeature(GameService service) {
+    public GatekeeperFeature(AuthenticationService service) {
         this.service = service;
 
         Supplier<MinecraftAccount> supplier = () -> accountBeingEvaluated;

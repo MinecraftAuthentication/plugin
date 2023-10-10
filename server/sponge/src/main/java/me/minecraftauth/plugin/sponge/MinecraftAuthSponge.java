@@ -20,7 +20,7 @@ import com.google.inject.Inject;
 import github.scarsz.configuralize.DynamicConfig;
 import github.scarsz.configuralize.ParseException;
 import lombok.Getter;
-import me.minecraftauth.plugin.common.service.GameService;
+import me.minecraftauth.plugin.common.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
@@ -36,21 +36,16 @@ import java.nio.file.Path;
         id = "minecraftauth",
         name = "MinecraftAuth",
         url = "https://minecraftauth.me",
-        authors = {
-                "MinecraftAuth"
-        }
+        description = "Authenticate players in your Minecraft server to various services",
+        authors = {"MinecraftAuth"}
 )
 public class MinecraftAuthSponge {
 
-    @Inject
-    @ConfigDir(sharedRoot = true)
-    private Path sharedConfigDir;
-
-    @Inject
-    private Logger logger;
-
     @Getter private static MinecraftAuthSponge instance;
-    @Getter private GameService service;
+    @Getter private AuthenticationService service;
+
+    @Inject private Logger logger;
+    @Inject @ConfigDir(sharedRoot = true) private Path sharedConfigDir;
 
     @Listener
     public void onServerStart(GameStartedServerEvent event) {
@@ -67,7 +62,7 @@ public class MinecraftAuthSponge {
         }
 
         try {
-            service = new GameService.Builder()
+            service = new AuthenticationService.Builder()
                     .withConfig(config)
                     .withLogger(new SpongeLogger(config, logger))
                     .build();

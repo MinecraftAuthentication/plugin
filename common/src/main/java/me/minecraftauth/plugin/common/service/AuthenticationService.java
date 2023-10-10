@@ -20,7 +20,6 @@ import alexh.weak.Dynamic;
 import github.scarsz.configuralize.DynamicConfig;
 import github.scarsz.configuralize.ParseException;
 import lombok.Getter;
-import me.minecraftauth.lib.Environment;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.abstracted.Logger;
@@ -29,16 +28,15 @@ import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperResult;
 
 import java.io.IOException;
-import java.time.Instant;
 
-public class GameService {
+public class AuthenticationService {
 
     @Getter private final DynamicConfig config;
     @Getter private final Logger logger;
     @Getter private final GatekeeperFeature gatekeeperFeature;
     @Getter private String serverToken;
 
-    private GameService(DynamicConfig config, Logger logger) throws IOException, ParseException {
+    private AuthenticationService(DynamicConfig config, Logger logger) throws IOException, ParseException {
         this.config = config;
         this.logger = logger;
         this.gatekeeperFeature = new GatekeeperFeature(this);
@@ -81,8 +79,8 @@ public class GameService {
             return this;
         }
 
-        public GameService build() throws IOException, ParseException {
-            return new GameService(config, logger);
+        public AuthenticationService build() throws IOException, ParseException {
+            return new AuthenticationService(config, logger);
         }
 
     }

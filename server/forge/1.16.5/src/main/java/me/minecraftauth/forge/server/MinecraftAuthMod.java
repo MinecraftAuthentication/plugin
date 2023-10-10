@@ -19,7 +19,7 @@ package me.minecraftauth.forge.server;
 import github.scarsz.configuralize.DynamicConfig;
 import github.scarsz.configuralize.ParseException;
 import lombok.Getter;
-import me.minecraftauth.plugin.common.service.GameService;
+import me.minecraftauth.plugin.common.service.AuthenticationService;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -42,7 +42,7 @@ public class MinecraftAuthMod {
     @Getter private static final Logger logger = LogManager.getLogger();
     @Getter private static MinecraftAuthMod instance;
 
-    @Getter private GameService service;
+    @Getter private AuthenticationService service;
 
     public MinecraftAuthMod() {
         MinecraftAuthMod.instance = this;
@@ -62,7 +62,7 @@ public class MinecraftAuthMod {
         }
 
         try {
-            service = new GameService.Builder()
+            service = new AuthenticationService.Builder()
                     .withConfig(config)
                     .withLogger(new me.minecraftauth.plugin.common.abstracted.Logger() {
                         @Override

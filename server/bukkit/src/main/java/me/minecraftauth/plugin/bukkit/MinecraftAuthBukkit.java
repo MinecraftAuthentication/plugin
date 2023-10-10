@@ -19,7 +19,7 @@ package me.minecraftauth.plugin.bukkit;
 import github.scarsz.configuralize.DynamicConfig;
 import github.scarsz.configuralize.ParseException;
 import lombok.Getter;
-import me.minecraftauth.plugin.common.service.GameService;
+import me.minecraftauth.plugin.common.service.AuthenticationService;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -33,7 +33,7 @@ import java.util.Locale;
 public final class MinecraftAuthBukkit extends JavaPlugin {
 
     @Getter private static MinecraftAuthBukkit instance;
-    @Getter private GameService service;
+    @Getter private AuthenticationService service;
 
     @Override
     public void onEnable() {
@@ -51,7 +51,7 @@ public final class MinecraftAuthBukkit extends JavaPlugin {
         }
 
         try {
-            service = new GameService.Builder()
+            service = new AuthenticationService.Builder()
                     .withConfig(config)
                     .withLogger(new BukkitLogger(config, getLogger()))
                     .build();
