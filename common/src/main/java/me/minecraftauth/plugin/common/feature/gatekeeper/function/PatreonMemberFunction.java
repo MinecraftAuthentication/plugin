@@ -35,7 +35,7 @@ public class PatreonMemberFunction extends AbstractFunction {
     public Expression.LazyNumber lazyEval(List<Expression.LazyNumber> lazyParams) {
         String tier = lazyParams.size() >= 1 ? lazyParams.get(0).getString() : null;
 
-        return VALUE_CACHE.get("PatreonMemberFunction" + getAccount().getUUID() + (tier != null ? tier : ""), s -> {
+        return cache(getClass().getSimpleName(), getAccount().getUUID().toString(), tier, () -> {
             try {
                 return AuthService.isSubscribedPatreon(getGatekeeper().getService().getServerToken(), getAccount().getUUID(), tier) ? TRUE : FALSE;
             } catch (LookupException e) {
