@@ -24,12 +24,12 @@ public abstract class PlayerLoginEvent implements Event {
 
     @Getter private final UUID uuid;
     @Getter private final String name;
-    @Getter private final boolean op;
+    @Getter private final boolean admin;
 
-    public PlayerLoginEvent(UUID uuid, String name, boolean op) {
+    public PlayerLoginEvent(UUID uuid, String name, boolean admin) {
         this.uuid = uuid;
         this.name = name;
-        this.op = op;
+        this.admin = admin;
     }
 
     public abstract void disallow(String message);
