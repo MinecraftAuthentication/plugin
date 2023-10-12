@@ -1,4 +1,6 @@
-name: Plugin
+name: MinecraftAuth
 version: @VERSION@
 main: me.minecraftauth.plugin.bungee.MinecraftAuthBungee
+authors: [ MinecraftAuth ]
 description: Authenticate players in your Minecraft server to various services
+website: https://minecraftauth.me
