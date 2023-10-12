@@ -44,9 +44,16 @@ public class MinecraftAuthVelocity {
     @Getter private static MinecraftAuthVelocity instance;
     @Getter private AuthenticationService service;
 
-    @Inject private Logger logger;
-    @Inject private ProxyServer server;
-    @DataDirectory Path dataDirectory;
+    @Inject private final ProxyServer server;
+    @Inject private final Logger logger;
+    private final Path dataDirectory;
+
+    @Inject
+    public MinecraftAuthVelocity(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
+        this.server = server;
+        this.logger = logger;
+        this.dataDirectory = dataDirectory;
+    }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
