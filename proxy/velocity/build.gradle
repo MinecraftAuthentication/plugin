@@ -7,7 +7,7 @@ repositories {
 java.toolchain.languageVersion = JavaLanguageVersion.of(11) // velocity requires 11+
 
 dependencies {
-    implementation project(':common')
+    shaded project(':common')
 
     compileOnly 'com.velocitypowered:velocity-api:3.2.0-SNAPSHOT'
     annotationProcessor 'com.velocitypowered:velocity-api:3.2.0-SNAPSHOT'
