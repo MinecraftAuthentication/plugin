@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 @Plugin(
-        id = "MinecraftAuth",
+        id = "minecraftauth",
         name = "Minecraft Authentication",
         url = "https://minecraftauth.me",
         description = "Authenticate players in your Minecraft server to various services",
