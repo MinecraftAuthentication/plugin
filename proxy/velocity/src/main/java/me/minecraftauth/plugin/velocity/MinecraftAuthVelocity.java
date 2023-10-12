@@ -44,8 +44,8 @@ public class MinecraftAuthVelocity {
     @Getter private static MinecraftAuthVelocity instance;
     @Getter private AuthenticationService service;
 
-    @Inject private final ProxyServer server;
-    @Inject private final Logger logger;
+    private final ProxyServer server;
+    private final Logger logger;
     private final Path dataDirectory;
 
     @Inject
