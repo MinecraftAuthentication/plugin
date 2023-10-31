@@ -16,7 +16,6 @@
 
 package me.minecraftauth.plugin.common.feature.gatekeeper;
 
-import alexh.weak.Dynamic;
 import com.udojava.evalex.AbstractOperator;
 import com.udojava.evalex.Operator;
 import lombok.Getter;
@@ -35,10 +34,10 @@ import java.util.function.Supplier;
 public class GatekeeperFeature extends Feature {
 
     @Getter private final AuthenticationService service;
-    @Getter private final List<Expression> expressions = new LinkedList<>();
-    @Getter private final Set<Operator> operators = new HashSet<>();
+    @Getter private final Map<String, Realm> realms = new HashMap<>();
+
     @Getter private final Set<AbstractFunction> functions = new HashSet<>();
-    @Getter private String kickMessage = null;
+    @Getter private final Set<Operator> operators = new HashSet<>();
 
     private final ReentrantLock expressionLock = new ReentrantLock();
     private MinecraftAccount accountBeingEvaluated = null;
@@ -77,7 +76,10 @@ public class GatekeeperFeature extends Feature {
     }
 
     public @NotNull GatekeeperResult verify(MinecraftAccount account, boolean playerIsAdmin) {
-        if (service.getServerToken() == null || expressions.isEmpty()) return new GatekeeperResult(GatekeeperResult.Type.NOT_ENABLED);
+        return verify(account, playerIsAdmin, null);
+    }
+    public @NotNull GatekeeperResult verify(MinecraftAccount account, boolean playerIsAdmin, String server) {
+        if (service.getServerToken() == null || realms.isEmpty()) return new GatekeeperResult(GatekeeperResult.Type.NOT_ENABLED);
 
         if (playerIsAdmin && service.getConfig().getBooleanElse("Gatekeeper.Admin bypass", service.getConfig().getBooleanElse("Gatekeeper.OP bypass", true))) {
             service.getLogger().info("[Gatekeeper] " + account + " is bypassing login requirements because they're a server admin");
@@ -97,38 +99,47 @@ public class GatekeeperFeature extends Feature {
                 return new GatekeeperResult(GatekeeperResult.Type.DENIED, "Unable to schedule verification, try again");
             this.accountBeingEvaluated = account;
 
-            boolean first = true;
-            for (Expression expression : expressions) {
-                if (expression.eval().compareTo(BigDecimal.ONE) == 0) {
-                    service.getLogger().info("[Gatekeeper] " + account + " is being allowed via [" + expression.getOriginalExpression() + "]");
-                    expression.incrementSuccessCount();
-                    if (!first) expressions.sort(Comparator.comparingInt(value -> -value.successCount));
-                    return new GatekeeperResult(GatekeeperResult.Type.ALLOWED);
+            Realm realm = realms.get(server);
+            if (realm != null) {
+                GatekeeperResult result = realm.verify(account);
+                if (result.getType() == GatekeeperResult.Type.DENIED) {
+                    service.getLogger().info("[Gatekeeper] Denying " + account + (server != null ? "@" + server : "") + ", no conditions were successful");
                 }
-                first = false;
+                return result;
+            } else {
+                return new GatekeeperResult(GatekeeperResult.Type.NOT_ENABLED);
             }
-        } catch (InterruptedException ignored) {
+        } catch (InterruptedException e) {
+            service.getLogger().info("[Gatekeeper] Denying " + account + ", verification was interrupted");
+            return new GatekeeperResult(GatekeeperResult.Type.DENIED, "Verification was interrupted, try again");
         } finally {
             expressionLock.unlock();
         }
-
-        service.getLogger().info("[Gatekeeper] Denying " + account + ", no conditions were successful");
-        return new GatekeeperResult(GatekeeperResult.Type.DENIED, kickMessage);
     }
 
     @Override
     public void reload() {
-        Dynamic kickMessageDynamic = service.getConfig().dget("Gatekeeper.Kick message");
-        kickMessage = kickMessageDynamic.isPresent() ? kickMessageDynamic.convert().intoString() : null;
+        realms.clear();
 
-        expressions.clear();
-        service.getConfig().dget("Gatekeeper.Conditions").children().forEach(d -> {
-            Expression expression = new Expression(d.asString());
-            for (AbstractFunction function : functions) expression.addLazyFunction(function);
-            for (Operator operator : operators) expression.addOperator(operator);
-            expressions.add(expression);
+        Realm superRealm = new Realm(this, service.getConfig().dget("Gatekeeper"), null);
+        if (!superRealm.getExpressions().isEmpty()) {
+            realms.put(null, superRealm);
+        }
+
+        service.getConfig().dget("Gatekeeper.Servers").children().forEach(child -> {
+            String server = child.key().convert().intoString();
+            realms.put(server, new Realm(this, child, server));
         });
-        service.getLogger().info("[Gatekeeper] Controlling entry based on " + expressions.size() + " conditions");
+
+        boolean onlySuper = realms.keySet().stream().allMatch(Objects::isNull);
+        int expressionCount = realms.values().stream().mapToInt(realm -> realm.getExpressions().size()).sum();
+
+        service.getLogger().info(new StringBuilder()
+                .append("[Gatekeeper] Controlling entry ")
+                .append(!onlySuper ? "to " + realms.size() + " realm" + (realms.size() > 1 ? "s" : "") + ", " : "")
+                .append("based on ").append(expressionCount).append(" conditions")
+                .toString()
+        );
     }
 
 }

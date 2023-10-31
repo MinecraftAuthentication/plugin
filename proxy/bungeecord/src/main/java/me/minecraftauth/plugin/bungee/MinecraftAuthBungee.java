@@ -37,7 +37,7 @@ public final class MinecraftAuthBungee extends Plugin {
 
         DynamicConfig config = new DynamicConfig();
         try {
-            config.addSource(MinecraftAuthBungee.class, "game-config", new File(getDataFolder(), "config.yml"));
+            config.addSource(MinecraftAuthBungee.class, "proxy-config", new File(getDataFolder(), "config.yml"));
             config.saveAllDefaults();
             config.loadAll();
         } catch (IOException | ParseException e) {

@@ -17,7 +17,7 @@
 package me.minecraftauth.plugin.bukkit;
 
 import me.minecraftauth.lib.exception.LookupException;
-import me.minecraftauth.plugin.common.abstracted.event.PlayerLoginEvent;
+import me.minecraftauth.plugin.common.abstracted.event.RealmJoinEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -30,7 +30,7 @@ public class BukkitEventsListener implements Listener {
     public void onPlayerLoginEvent(AsyncPlayerPreLoginEvent event) {
         try {
             boolean op = Bukkit.getOperators().stream().anyMatch(offlinePlayer -> offlinePlayer.getUniqueId().equals(event.getUniqueId()));
-            MinecraftAuthBukkit.getInstance().getService().handleLoginEvent(new PlayerLoginEvent(event.getUniqueId(), event.getName(), op) {
+            MinecraftAuthBukkit.getInstance().getService().handleRealmJoinEvent(new RealmJoinEvent(event.getUniqueId(), event.getName(), op, null) {
                 @Override
                 public void disallow(String message) {
                     event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, message);

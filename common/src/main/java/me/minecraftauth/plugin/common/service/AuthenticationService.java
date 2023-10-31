@@ -23,7 +23,7 @@ import lombok.Getter;
 import me.minecraftauth.lib.account.platform.minecraft.MinecraftAccount;
 import me.minecraftauth.lib.exception.LookupException;
 import me.minecraftauth.plugin.common.abstracted.Logger;
-import me.minecraftauth.plugin.common.abstracted.event.PlayerLoginEvent;
+import me.minecraftauth.plugin.common.abstracted.event.RealmJoinEvent;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperFeature;
 import me.minecraftauth.plugin.common.feature.gatekeeper.GatekeeperResult;
 
@@ -56,8 +56,8 @@ public class AuthenticationService {
         gatekeeperFeature.reload();
     }
 
-    public void handleLoginEvent(PlayerLoginEvent event) throws LookupException {
-        GatekeeperResult gatekeeperResult = gatekeeperFeature.verify(new MinecraftAccount(event.getUuid(), event.getName()), event.isAdmin());
+    public void handleRealmJoinEvent(RealmJoinEvent event) throws LookupException {
+        GatekeeperResult gatekeeperResult = gatekeeperFeature.verify(new MinecraftAccount(event.getUuid(), event.getName()), event.isAdmin(), event.getServer());
 
         if (gatekeeperResult.getType().willDenyLogin()) {
             event.disallow(gatekeeperResult.getMessage());

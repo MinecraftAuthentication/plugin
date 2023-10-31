@@ -20,16 +20,18 @@ import lombok.Getter;
 
 import java.util.UUID;
 
-public abstract class PlayerLoginEvent implements Event {
+public abstract class RealmJoinEvent implements Event {
 
     @Getter private final UUID uuid;
     @Getter private final String name;
     @Getter private final boolean admin;
+    @Getter private final String server;
 
-    public PlayerLoginEvent(UUID uuid, String name, boolean admin) {
+    public RealmJoinEvent(UUID uuid, String name, boolean admin, String server) {
         this.uuid = uuid;
         this.name = name;
         this.admin = admin;
+        this.server = server;
     }
 
     public abstract void disallow(String message);
