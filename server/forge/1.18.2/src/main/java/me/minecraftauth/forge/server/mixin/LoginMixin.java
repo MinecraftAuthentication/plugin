@@ -19,7 +19,7 @@ package me.minecraftauth.forge.server.mixin;
 import com.mojang.authlib.GameProfile;
 import me.minecraftauth.forge.server.MinecraftAuthMod;
 import me.minecraftauth.lib.exception.LookupException;
-import me.minecraftauth.plugin.common.abstracted.event.PlayerLoginEvent;
+import me.minecraftauth.plugin.common.abstracted.event.RealmJoinEvent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -42,10 +42,11 @@ public abstract class LoginMixin {
 //            System.out.println("Player " + profile.getName() + "[" + profile.getId() + "] is logging in @ " + address);
 
             try {
-                MinecraftAuthMod.getInstance().getService().handleLoginEvent(new PlayerLoginEvent(
+                MinecraftAuthMod.getInstance().getService().handleRealmJoinEvent(new RealmJoinEvent(
                         profile.getId(),
                         profile.getName(),
-                        ServerLifecycleHooks.getCurrentServer().getPlayerList().isOp(profile)
+                        ServerLifecycleHooks.getCurrentServer().getPlayerList().isOp(profile),
+                        null
                 ) {
                     @Override
                     public void disallow(String message) {

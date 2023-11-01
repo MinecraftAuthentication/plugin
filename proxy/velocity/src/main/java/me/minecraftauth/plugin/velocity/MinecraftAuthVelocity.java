@@ -61,7 +61,7 @@ public class MinecraftAuthVelocity {
 
         DynamicConfig config = new DynamicConfig();
         try {
-            config.addSource(MinecraftAuthVelocity.class, "game-config", new File(dataDirectory.toFile(), "MinecraftAuth.yml"));
+            config.addSource(MinecraftAuthVelocity.class, "proxy-config", new File(dataDirectory.toFile(), "MinecraftAuth.yml"));
             config.saveAllDefaults();
             config.loadAll();
         } catch (IOException | ParseException e) {

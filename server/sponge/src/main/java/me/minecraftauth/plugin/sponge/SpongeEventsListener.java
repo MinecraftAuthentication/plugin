@@ -17,7 +17,7 @@
 package me.minecraftauth.plugin.sponge;
 
 import me.minecraftauth.lib.exception.LookupException;
-import me.minecraftauth.plugin.common.abstracted.event.PlayerLoginEvent;
+import me.minecraftauth.plugin.common.abstracted.event.RealmJoinEvent;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
@@ -29,10 +29,11 @@ public class SpongeEventsListener {
     @Listener(order = Order.FIRST)
     public void onClientConnectionLogin(ClientConnectionEvent.Login event) {
         try {
-            MinecraftAuthSponge.getInstance().getService().handleLoginEvent(new PlayerLoginEvent(
+            MinecraftAuthSponge.getInstance().getService().handleRealmJoinEvent(new RealmJoinEvent(
                     event.getProfile().getUniqueId(),
                     event.getProfile().getName().orElse(""),
-                    false // sponge has no concept of "ops"
+                    false, // sponge has no concept of "ops",
+                    null
             ) {
                 @Override
                 public void disallow(String message) {

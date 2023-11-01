@@ -5,9 +5,10 @@ Gatekeeper:
     - d7c1db4d-e57b-488b-b8bc-4462fe49a3e8 # Scarsz
   Admin bypass: true
 
-  Kick message: "You must be following me on Twitch to join my Minecraft server!"
+  Kick message: "You must be in my Discord server to join the network!"
   Conditions:
-    - TwitchFollower()
+    - DiscordServer("000000000000000000")
+#    - TwitchFollower()
 #    - TwitchSubscriber(3)
 #    - TwitchSubscriber() and not(DiscordRole("naughty"))
 #    - GlimpseSponsor()
@@ -15,7 +16,17 @@ Gatekeeper:
 #    - PatreonMember()
 #    - PatreonMember("gold")
 #    - DiscordRole("000000000000000000")
-#    - DiscordServer("000000000000000000")
 #    - YouTubeSubscriber()
 #    - YouTubeMember()
 #    - DiscordServer("000000000000000000") and TwitchSubscriber()
+
+  Servers:
+    event:
+      Kick message: "You must be following me on Twitch to join the event server!"
+      Conditions:
+        - TwitchFollower()
+
+#    survival:
+#      Kick message: "You must be a tier 3 Twitch subscriber to join the survival server!"
+#      Conditions:
+#        - TwitchSubscriber(3)
