@@ -16,6 +16,7 @@
 
 package me.minecraftauth.plugin.common.feature.gatekeeper;
 
+import alexh.weak.Dynamic;
 import com.udojava.evalex.AbstractOperator;
 import com.udojava.evalex.Operator;
 import lombok.Getter;
@@ -126,10 +127,13 @@ public class GatekeeperFeature extends Feature {
             realms.put(null, superRealm);
         }
 
-        service.getConfig().dget("Gatekeeper.Servers").children().forEach(child -> {
-            String server = child.key().convert().intoString();
-            realms.put(server, new Realm(this, child, server));
-        });
+        Dynamic serversDynamic = service.getConfig().dget("Gatekeeper.Servers");
+        if (serversDynamic.isPresent()) {
+            serversDynamic.children().forEach(child -> {
+                String server = child.key().convert().intoString();
+                realms.put(server, new Realm(this, child, server));
+            });
+        }
 
         boolean onlySuper = realms.keySet().stream().allMatch(Objects::isNull);
         int expressionCount = realms.values().stream().mapToInt(realm -> realm.getExpressions().size()).sum();
