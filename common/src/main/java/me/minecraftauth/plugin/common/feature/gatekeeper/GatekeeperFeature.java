@@ -127,7 +127,7 @@ public class GatekeeperFeature extends Feature {
             realms.put(null, superRealm);
         }
 
-        Dynamic serversDynamic = service.getConfig().dget("Gatekeeper.Servers");
+        Dynamic serversDynamic = service.getConfig().dgetSilent("Gatekeeper.Servers");
         if (serversDynamic.isPresent()) {
             serversDynamic.children().forEach(child -> {
                 String server = child.key().convert().intoString();
