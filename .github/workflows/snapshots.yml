@@ -39,7 +39,7 @@ jobs:
       - name: Build Velocity plugin
         run: ./gradlew --no-daemon proxy:velocity:build
       - name: Upload artifacts
-        uses: pyTooling/Actions/releaser
+        uses: pyTooling/Actions/releaser@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: snapshot
