@@ -15,5 +15,5 @@ pluginManagement {
 rootProject.name = 'MinecraftAuthentication-Plugin'
 
 include 'common'
-include 'server:bukkit', 'server:sponge', 'server:forge:1.16.5', 'server:forge:1.18.2', 'server:forge:1.19.3'
+include 'server:bukkit', 'server:sponge', 'server:forge:1.16.5', 'server:forge:1.18.2', 'server:forge:1.19.3', 'server:forge:1.20.1'
 include 'proxy:bungeecord', 'proxy:velocity'
