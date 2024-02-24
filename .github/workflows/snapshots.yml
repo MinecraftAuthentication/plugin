@@ -32,6 +32,8 @@ jobs:
         run: ./gradlew --no-daemon server:forge:1.18.2:build
       - name: Build Forge 1.19.3 mod
         run: ./gradlew --no-daemon server:forge:1.19.3:build
+      - name: Build Forge 1.20.1 mod
+        run: ./gradlew --no-daemon server:forge:1.20.1:build
       - name: Build BungeeCord plugin
         run: ./gradlew --no-daemon proxy:bungeecord:build
       - name: Build Velocity plugin
