@@ -1,0 +1,48 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'com.gradleup.shadow'
+}
+
+group = 'me.minecraftauth'
+version = project(":game:common").version
+
+repositories {
+    mavenCentral()
+    maven {
+        url = uri("https://libraries.minecraft.net")
+    }
+}
+
+dependencies {
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+
+    compileOnly "net.md-5:bungeecord-api:1.21-R0.3"
+}
+
+shadowJar {
+    mergeServiceFiles()
+    minimize()
+    archiveClassifier.set("")
+    archiveFileName.set("MCAuth-Bungee-${project.version}.jar")
+
+    doLast {
+        def targetDir = file("$rootDir/.libs/proxy")
+        targetDir.mkdirs()
+        def file = archiveFile.get().asFile
+        copy {
+            from file
+            into targetDir
+        }
+    }
+}
+
+build {
+    dependsOn shadowJar
+}
+
+test {
+    useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(21)
+}

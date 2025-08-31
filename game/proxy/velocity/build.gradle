@@ -1,0 +1,51 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'org.jetbrains.kotlin.kapt'
+    id 'com.gradleup.shadow'
+}
+
+group = 'me.minecraftauth'
+version = project(":game:common").version
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "papermc"
+        url = uri("https://repo.papermc.io/repository/maven-public/")
+    }
+}
+
+dependencies {
+    implementation project(":game:common")
+
+    compileOnly 'com.velocitypowered:velocity-api:3.4.0-SNAPSHOT'
+    kapt 'com.velocitypowered:velocity-api:3.4.0-SNAPSHOT'
+}
+
+shadowJar {
+    mergeServiceFiles()
+    minimize()
+    archiveClassifier.set("")
+    archiveFileName.set("MCAuth-Velocity-${project.version}.jar")
+
+    doLast {
+        def targetDir = file("$rootDir/.libs/proxy")
+        targetDir.mkdirs()
+        def file = archiveFile.get().asFile
+        copy {
+            from file
+            into targetDir
+        }
+    }
+}
+
+build {
+    dependsOn shadowJar
+}
+
+test {
+    useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(21)
+}

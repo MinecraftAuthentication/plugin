@@ -1,0 +1,44 @@
+# You will need an application ID and Secret from https://minecraftauth.me/developers
+application:
+  id: ""
+  secret: ""
+
+# This is a list of UUIDs that will bypass the authentication system globally.
+bypass:
+  - "d7c1db4d-e57b-488b-b8bc-4462fe49a3e8" # Scarsz
+
+# If users have the permission "mcauth.bypass", they will bypass the authentication system if this is true.
+bypass_with_permission: true
+
+# The message to show when a user is not authenticated.
+kick_message: "&cYou must be following me on Twitch to join my Minecraft Server!\n\n&7If you are, link your accounts at &ehttps://minecraftauth.me&7!"
+
+# Permission Levels Configuration
+# Each group represents a distinct access level - users only need to meet ONE condition in ONE group to be allowed to join.
+conditions:
+  - DiscordServer(000000000000000000)
+  - DiscordRole(000000000000000000)
+  - TwitchFollower()
+  - TwitchSubscriber()
+  - TwitchSubscriber(1)
+  - PatreonMember()
+  - PatreonMember("gold")
+  - YouTubeSubscriber()
+  #- TwitchSubscriber() and not(DiscordRole("naughty"))
+  #- TwitchSubscriber() and DiscordRole("naughty")
+
+# This will only be taken into effect if the plugin is run in a proxy environment (like BungeeCord or Velocity).
+proxy:
+  servers:
+    - name: "event"
+      kickMsg: "&cYou must be following me on Twitch to join the event Server!\n\n&7If you are, link your accounts at &ehttps://minecraftauth.me&7!"
+      bypass:
+        - "d7c1db4d-e57b-488b-b8bc-4462fe49a3e8" # Scarsz
+      bypass_with_permission: true
+      conditions:
+        - TwitchFollower()
+
+debug:
+  host: "https://api.minecraftauth.me"
+  ver: "v1"
+  debug: false
