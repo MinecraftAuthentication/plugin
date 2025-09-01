@@ -1,6 +1,6 @@
 import me.minecraftauth.lib.AuthConfig
 import me.minecraftauth.lib.MCAuth
-import me.minecraftauth.lib.enum.Platform
+import me.minecraftauth.lib.data.Platform
 
 fun main() {
     println("Hello, MinecraftAuth!")

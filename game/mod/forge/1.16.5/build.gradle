@@ -1,5 +1,8 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+    id 'com.gradleup.shadow'
     id 'idea'
 }
 
@@ -74,7 +77,7 @@ tasks.named('processResources', ProcessResources).configure {
         expand replaceProperties + [project: project]
     }}
 
-tasks.named('jar', Jar).configure {
+tasks.named('shadowJar', ShadowJar).configure {
     manifest {
         attributes([
                 "Specification-Title": mod_id,
@@ -87,11 +90,36 @@ tasks.named('jar', Jar).configure {
         ])
     }
 
-    archiveBaseName.set("MCAuth-Forge")
+    mergeServiceFiles()
+    minimize()
     archiveClassifier.set("")
-    destinationDirectory = file("$rootDir/.libs/mod/forge/")
+    archiveFileName.set("MCAuth-Forge-${project.version}.jar")
+
+    include("kotlin/**")
+    include("me/minecraftauth/**")
+    include("config/en.yml")
+    include("github/scarsz/**")
+    include("org/json/**")
+    include("org/yaml/**")
+    include("alexh/**")
+    include("META-INF/**")
+    include("mcauth.mixins.json")
+    include("pack.mcmeta")
+
+    doLast {
+        def targetDir = file("$rootDir/.libs/mod/forge")
+        targetDir.mkdirs()
+        def file = archiveFile.get().asFile
+        copy {
+            from file
+            into targetDir
+        }
+    }
 }
 
+tasks.build {
+    dependsOn tasks.shadowJar
+}
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }

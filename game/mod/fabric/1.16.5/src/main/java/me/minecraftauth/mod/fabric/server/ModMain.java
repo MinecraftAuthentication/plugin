@@ -5,14 +5,12 @@ import me.minecraftauth.game.config.GatekeeperResult;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.util.UUID;
 
 public class ModMain implements ModInitializer {
     public static final String MOD_ID = "mcauth";

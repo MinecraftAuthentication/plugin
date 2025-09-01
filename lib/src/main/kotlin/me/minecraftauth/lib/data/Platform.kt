@@ -1,4 +1,4 @@
-package me.minecraftauth.lib.enum
+package me.minecraftauth.lib.data
 
 /**
  * Represents the supported platforms for authentication.

@@ -1,6 +1,5 @@
 package me.minecraftauth.game
 
-import alexh.weak.Dynamic
 import com.udojava.evalex.AbstractOperator
 import com.udojava.evalex.Operator
 import github.scarsz.configuralize.DynamicConfig

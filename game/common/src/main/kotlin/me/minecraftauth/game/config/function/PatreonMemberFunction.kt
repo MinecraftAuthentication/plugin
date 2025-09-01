@@ -2,8 +2,7 @@ package me.minecraftauth.game.config.function
 
 import com.udojava.evalex.Expression
 import me.minecraftauth.lib.MCAuth
-import me.minecraftauth.lib.enum.Platform
-import java.util.Objects
+import me.minecraftauth.lib.data.Platform
 import java.util.UUID
 
 class PatreonMemberFunction(private val uuid: UUID, private val api: MCAuth) : AbstractFunction("PatreonMember", 0) {

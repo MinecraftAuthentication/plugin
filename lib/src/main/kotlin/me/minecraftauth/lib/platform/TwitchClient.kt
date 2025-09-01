@@ -5,10 +5,9 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import me.minecraftauth.lib.AuthConfig
-import me.minecraftauth.lib.enum.Platform
+import me.minecraftauth.lib.data.Platform
 import me.minecraftauth.lib.exception.ApplicationNotFoundException
 import me.minecraftauth.lib.exception.InvalidParameterException
-import me.minecraftauth.lib.exception.NoPatronsFoundException
 import me.minecraftauth.lib.exception.PlatformIdNotLinkedException
 
 class TwitchClient(

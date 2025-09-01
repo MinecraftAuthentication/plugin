@@ -15,7 +15,6 @@ import me.minecraftauth.game.config.function.YouTubeMemberTierFunction
 import me.minecraftauth.game.config.function.YouTubeSubscriberFunction
 import me.minecraftauth.lib.MCAuth
 import java.math.BigDecimal
-import java.util.Comparator
 import java.util.UUID
 
 class Server(private val config: Dynamic, private val server: String, private val api: MCAuth, private val keeper: GateKeeper) {

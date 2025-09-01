@@ -41,7 +41,7 @@ tasks.build {
     dependsOn("shadowJar")
 }
 
-val targetJavaVersion = 17
+val targetJavaVersion = 8
 kotlin {
     jvmToolchain(targetJavaVersion)
 }

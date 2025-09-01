@@ -4,7 +4,6 @@ import github.scarsz.configuralize.DynamicConfig
 import me.minecraftauth.game.config.GatekeeperResult
 import me.minecraftauth.lib.AuthConfig
 import me.minecraftauth.lib.MCAuth
-import java.io.File
 import java.nio.file.Path
 import java.util.UUID
 import kotlin.io.path.Path
@@ -26,7 +25,7 @@ class Common {
         cfgPath = path
 
         cfg = DynamicConfig()
-        cfg.addSource(CommonAPI::class.java, "config", Path(path.toFile().absolutePath, "config.yml").toFile())
+        cfg.addSource(CommonAPI::class.java, "config", Path(path.toFile().absolutePath, "MCAuth.yml").toFile())
 
         cfg.saveAllDefaults()
         cfg.loadAll()
@@ -37,9 +36,11 @@ class Common {
 
         api = MCAuth(
             AuthConfig(
-                appId = cfg.getLong("application.id"),
-                token = cfg.getString("application.secret"),
-                debug = true
+                cfg.getLong("application.id"),
+                cfg.getString("application.secret"),
+                true,
+                cfg.getString("debug.host"),
+                cfg.getString("debug.ver")
             )
         )
 

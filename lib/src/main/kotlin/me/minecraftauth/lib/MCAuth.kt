@@ -1,7 +1,7 @@
 @file:Suppress("unused")
 package me.minecraftauth.lib
 
-import me.minecraftauth.lib.enum.Platform
+import me.minecraftauth.lib.data.Platform
 import me.minecraftauth.lib.platform.DiscordClient
 import me.minecraftauth.lib.platform.PatreonClient
 import me.minecraftauth.lib.platform.TwitchClient

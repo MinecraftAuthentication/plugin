@@ -4,12 +4,10 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import me.minecraftauth.lib.AuthConfig
-import me.minecraftauth.lib.enum.Platform
+import me.minecraftauth.lib.data.Platform
 import me.minecraftauth.lib.util.Signature
-import org.slf4j.LoggerFactory
 import java.util.Base64
 import java.util.UUID
-import kotlin.math.pow
 
 open class BasePlatformClient(
     protected val fromPlatform: Platform,
