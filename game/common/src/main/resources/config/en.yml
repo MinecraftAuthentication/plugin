@@ -21,10 +21,12 @@ super:
     - DiscordRole(000000000000000000)
     - TwitchFollower()
     - TwitchSubscriber()
-    - TwitchSubscriber(1)
+    - TwitchSubscriberAt(1)
     - PatreonMember()
-    - PatreonMember("gold")
+    - PatreonMemberAt("gold")
     - YouTubeSubscriber()
+    - YouTubeMember()
+    - YouTubeMemberAt("tier")
     #- TwitchSubscriber() and not(DiscordRole("naughty"))
     #- TwitchSubscriber() and DiscordRole("naughty")
 
@@ -32,7 +34,7 @@ super:
 proxy:
   servers:
     - name: "event"
-      kickMsg: "&cYou must be following me on Twitch to join the event Server!\n\n&7If you are, link your accounts at &ehttps://minecraftauth.me&7!"
+      kick_message: "&cYou must be following me on Twitch to join the event Server!\n\n&7If you are, link your accounts at &ehttps://minecraftauth.me&7!"
       bypass:
         - "d7c1db4d-e57b-488b-b8bc-4462fe49a3e8" # Scarsz
       bypass_with_permission: true
