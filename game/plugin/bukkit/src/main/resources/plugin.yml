@@ -1,7 +1,7 @@
 name: MCAuth
 version: '1.0'
-main: me.minecraftauth.plugin.bukkit.server.Bukkit
-api-version: '1.18'
+main: me.minecraftauth.plugin.bukkit.server.PluginMain
+api-version: '1.8'
 
 description: MinecraftAuthentication allows you to link your Minecraft account to your various other accounts, such as Discord or Twitch.
 authors: [Scarsz, Cam]

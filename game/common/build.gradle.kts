@@ -1,5 +1,3 @@
-import java.net.URL
-
 plugins {
     kotlin("jvm") version "2.2.0"
 }
@@ -17,6 +15,8 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":lib"))
+    implementation(project(":lib", configuration = "shadow"))
     implementation("github.scarsz:configuralize:1.4.1")
+    implementation("com.udojava:EvalEx:2.7")
+    implementation("com.github.ben-manes.caffeine:caffeine:2.9.3")
 }

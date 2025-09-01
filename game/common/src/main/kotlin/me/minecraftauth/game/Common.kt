@@ -1,10 +1,12 @@
 package me.minecraftauth.game
 
 import github.scarsz.configuralize.DynamicConfig
+import me.minecraftauth.game.config.GatekeeperResult
 import me.minecraftauth.lib.AuthConfig
 import me.minecraftauth.lib.MCAuth
 import java.io.File
 import java.nio.file.Path
+import java.util.UUID
 import kotlin.io.path.Path
 import kotlin.properties.Delegates
 
@@ -41,11 +43,19 @@ class Common {
             )
         )
 
-        return CommonAPI(cfg, api)
+        val keeper = GateKeeper(cfg, api)
+        return CommonAPI(cfg, api, keeper)
     }
 
-    class CommonAPI(private val cfg: DynamicConfig, private val api: MCAuth) {
+    class CommonAPI(private val cfg: DynamicConfig, private val api: MCAuth, private val keeper: GateKeeper) {
 
+        fun onJoin(uuid: UUID): GatekeeperResult {
+            return onProxyServerSwitch("super", uuid)
+        }
+
+        fun onProxyServerSwitch(serverName: String, uuid: UUID): GatekeeperResult {
+            return keeper.getServer(serverName)?.verify(uuid) ?: GatekeeperResult(GatekeeperResult.Type.DENIED, "Unable to verify login")
+        }
 
     }
 

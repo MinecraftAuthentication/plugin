@@ -8,13 +8,15 @@ version = project(":game:common").version
 
 repositories {
     mavenCentral()
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") {
+    maven("https://hub.spigotmc.org/nexus/repository/public/") {
         name = "spigotmc-repo"
     }
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
+    implementation(project(":game:common"))
+
+    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }
 

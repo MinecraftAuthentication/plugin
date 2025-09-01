@@ -95,7 +95,9 @@ neoForge {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
-dependencies {}
+dependencies {
+    implementation(project(":game:common"))
+}
 
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.

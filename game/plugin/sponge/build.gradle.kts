@@ -18,11 +18,13 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":game:common"))
+
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }
 
 sponge {
-    apiVersion("13.1.0-SNAPSHOT")
+    apiVersion("7.3.0")
     license("All-Rights-Reserved")
     loader {
         name(PluginLoaders.JAVA_PLAIN)
@@ -30,12 +32,12 @@ sponge {
     }
     plugin("sponge") {
         displayName("MCAuth")
-        entrypoint("me.minecraftauth.plugin.sponge.Sponge")
-        description("My plugin description")
+        entrypoint("me.minecraftauth.plugin.sponge.PluginMain")
+        description("MinecraftAuthentication allows you to link your Minecraft account to your various other accounts, such as Discord or Twitch.")
         links {
-            // homepage("https://spongepowered.org")
-            // source("https://spongepowered.org/source")
-            // issues("https://spongepowered.org/issues")
+            homepage("https://minecraftauth.me")
+            source("https://github.com/MinecraftAuthentication/plugin")
+            issues("https://discord.gg/QhBWpURsD7")
         }
         dependency("spongeapi") {
             loadOrder(PluginDependency.LoadOrder.AFTER)

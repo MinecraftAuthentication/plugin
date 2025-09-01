@@ -3,7 +3,8 @@
   "minVersion": "0.8",
   "package": "me.minecraftauth.mod.neo.server.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
+  "server": [
+    "LoginMixin"
   ],
   "client": [
   ],
