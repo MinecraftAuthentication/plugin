@@ -2,13 +2,14 @@ package me.minecraftauth.game
 
 import com.udojava.evalex.AbstractOperator
 import com.udojava.evalex.Operator
-import github.scarsz.configuralize.DynamicConfig
+import dev.dejvokep.boostedyaml.YamlDocument
+import dev.dejvokep.boostedyaml.block.implementation.Section
 import me.minecraftauth.game.config.Server
 import me.minecraftauth.lib.MCAuth
 import java.math.BigDecimal
 import java.util.Objects
 
-class GateKeeper(private val config: DynamicConfig, private val api: MCAuth) {
+class GateKeeper(private val config: YamlDocument, private val api: MCAuth) {
 
     private val servers: MutableMap<String, Server> = mutableMapOf()
     private val operators: MutableSet<Operator> = mutableSetOf()
@@ -39,14 +40,14 @@ class GateKeeper(private val config: DynamicConfig, private val api: MCAuth) {
     fun reload() {
         servers.clear()
 
-        val superServer = Server(config.dget("super"), "super", api, this)
+        val superServer = Server(config.getSection("super"), "super", api, this)
         if (superServer.getExpressions().isNotEmpty()) servers.put("super", superServer)
 
-        val proxyServers = config.dgetSilent("proxy.servers")
+        val proxyServers = config.getOptionalSection("proxy.servers")
         if (proxyServers.isPresent) {
-            proxyServers.children().forEach {
-                val server = it.key().convert().intoString()
-                servers.put(server, Server(it, server, api, this))
+            proxyServers.get().keys.forEach {
+                val server = it as String
+                servers.put(server, Server(proxyServers.get().get(server) as Section, server, api, this))
             }
         }
 

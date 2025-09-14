@@ -1,6 +1,6 @@
 package me.minecraftauth.game.config
 
-import alexh.weak.Dynamic
+import dev.dejvokep.boostedyaml.block.implementation.Section
 import me.minecraftauth.game.GateKeeper
 import me.minecraftauth.game.config.function.AbstractFunction
 import me.minecraftauth.game.config.function.DiscordMemberFunction
@@ -17,9 +17,9 @@ import me.minecraftauth.lib.MCAuth
 import java.math.BigDecimal
 import java.util.UUID
 
-class Server(private val config: Dynamic, private val server: String, private val api: MCAuth, private val keeper: GateKeeper) {
+class Server(private val config: Section, private val server: String, private val api: MCAuth, private val keeper: GateKeeper) {
 
-    private val kick: String = config.get("kick_message").asString()
+    private val kick: String = config.getString("kick_message")
 
     fun getExpressions(): List<Expression> {
         return getExpressions(UUID.randomUUID())
@@ -46,8 +46,8 @@ class Server(private val config: Dynamic, private val server: String, private va
 
     private fun getExpressions(uuid: UUID): List<Expression> {
         val list = mutableListOf<Expression>()
-        config.get("conditions").children().forEach { it ->
-            val expr = Expression(it.asString())
+        config.getList("conditions").forEach { it ->
+            val expr = Expression(it.toString())
             getFunctions(uuid).forEach { func -> expr.addLazyFunction(func) }
             keeper.getOperators().forEach { operator -> expr.addOperator(operator) }
             list.add(expr)

@@ -2,7 +2,6 @@ package me.minecraftauth.lib.util
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
@@ -15,8 +14,11 @@ import kotlinx.serialization.serializer
 import java.io.IOException
 import kotlin.reflect.full.createType
 
-val http = HttpClient(CIO) {
-    install(UserAgent) { agent = "minecraftauth.me" }
+private val cioEngine = CIO.create {
+    // no logging configuration, purely silent
+}
+
+val http = HttpClient(cioEngine) {
     install(ContentNegotiation) {
         json(Json {
             ignoreUnknownKeys = true

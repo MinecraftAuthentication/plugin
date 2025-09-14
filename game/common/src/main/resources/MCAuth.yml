@@ -17,8 +17,8 @@ super:
   # Permission Levels Configuration
   # Each group represents a distinct access level - users only need to meet ONE condition to be allowed to join.
   conditions:
-    - DiscordServer(000000000000000000)
-    - DiscordRole(000000000000000000)
+    - DiscordMember(000000000000000000)
+    - DiscordRole(000000000000000000, 000000000000000000)
     - TwitchFollower()
     - TwitchSubscriber()
     - TwitchSubscriberAt(1)
@@ -33,7 +33,7 @@ super:
 # This will only be taken into effect if the plugin is run in a proxy environment (like BungeeCord or Velocity).
 proxy:
   servers:
-    - name: "event"
+    event:
       kick_message: "&cYou must be following me on Twitch to join the event Server!\n\n&7If you are, link your accounts at &ehttps://minecraftauth.me&7!"
       bypass:
         - "d7c1db4d-e57b-488b-b8bc-4462fe49a3e8" # Scarsz
@@ -45,3 +45,5 @@ debug:
   host: "https://api.minecraftauth.me"
   ver: "v1"
   debug: false
+
+config-version: 1

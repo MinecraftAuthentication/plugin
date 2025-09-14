@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(":game:common")
+    implementation project(path: ":game:common", configuration: "shadow")
 
     compileOnly 'com.velocitypowered:velocity-api:3.4.0-SNAPSHOT'
     kapt 'com.velocitypowered:velocity-api:3.4.0-SNAPSHOT'

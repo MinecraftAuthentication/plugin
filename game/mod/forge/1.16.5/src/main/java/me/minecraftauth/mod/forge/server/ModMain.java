@@ -7,10 +7,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-@Mod(ModMain.MOD_ID)
+@Mod("mcauth")
 public class ModMain {
 
-    public static final String MOD_ID = "mcauth";
     private static final Logger logger = LogManager.getLogger();
     public static Common.CommonAPI commonAPI = null;
     private static ModMain instance;
@@ -20,7 +19,7 @@ public class ModMain {
         try {
             commonAPI = new Common().init(new File("config").toPath());
         } catch (IllegalStateException e) {
-            logger.warn("Application not configured. See config.yml. Thanks!");
+            logger.warn("Application not configured. See config.yml. Thanks! *(" + e.getMessage() + ")");
             throw new Exception("Application not configured. See config.yml. Thanks!");
         }
     }

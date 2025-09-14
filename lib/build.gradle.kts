@@ -36,16 +36,6 @@ tasks.shadowJar {
     relocate("io.ktor", "me.minecraftauth.lib.libraries.ktor")
     relocate("kotlinx", "me.minecraftauth.lib.libraries.kotlinx")
     relocate("org.bouncycastle", "me.minecraftauth.lib.libraries.bouncycastle")
-
-    include("io/ktor/**")
-    include("kotlinx/serialization/**")
-    include("kotlinx/coroutines/**")
-    include("kotlinx/io/**")
-    include("kotlin/reflect/**")
-    include("META-INF/services/io.ktor.**")
-    include("META-INF/services/kotlinx.serialization.**")
-    include("org/bouncycastle/**")
-    include("me/minecraftauth/**")
 }
 
 tasks.build {

@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":game:common"))
+    implementation(project(path = ":game:common", configuration = "shadow"))
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }

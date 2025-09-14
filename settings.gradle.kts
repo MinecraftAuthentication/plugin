@@ -21,32 +21,22 @@ plugins {
 rootProject.name = "plugin"
 include("lib")
 
+include("game")
+
 include("game:common")
 
 // FABRIC
 include("game:mod:fabric:1.16.5")
 include("game:mod:fabric:1.18.2")
 include("game:mod:fabric:1.19.2")
-include("game:mod:fabric:1.19.3")
-include("game:mod:fabric:1.20.1")
-include("game:mod:fabric:1.21.1")
-include("game:mod:fabric:1.21.3")
-include("game:mod:fabric:1.21.4")
 
 // FORGE
 include("game:mod:forge:1.16.5")
 include("game:mod:forge:1.18.2")
 include("game:mod:forge:1.19.2")
-include("game:mod:forge:1.19.3")
-include("game:mod:forge:1.20.1")
-include("game:mod:forge:1.21.1")
-include("game:mod:forge:1.21.3")
-include("game:mod:forge:1.21.4")
 
 // NEOFORGE
 include("game:mod:neo:1.21.1")
-include("game:mod:neo:1.21.3")
-include("game:mod:neo:1.21.4")
 
 // PROXY
 include("game:proxy:velocity")
