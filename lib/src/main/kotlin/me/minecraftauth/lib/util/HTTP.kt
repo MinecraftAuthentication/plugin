@@ -66,7 +66,7 @@ inline fun <reified T> request(
             }
 
             if (debug) {
-                println("-> $method $url")
+                println("-> $method $url ($headers)")
                 if (body != null) println("[${body::class.qualifiedName}] $body")
             }
         }

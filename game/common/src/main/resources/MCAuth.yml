@@ -17,8 +17,8 @@ super:
   # Permission Levels Configuration
   # Each group represents a distinct access level - users only need to meet ONE condition to be allowed to join.
   conditions:
-    - DiscordMember(000000000000000000)
-    - DiscordRole(000000000000000000, 000000000000000000)
+    - DiscordMember("000000000000000000")
+    - DiscordRole("000000000000000000", "000000000000000000")
     - TwitchFollower()
     - TwitchSubscriber()
     - TwitchSubscriberAt(1)

@@ -33,6 +33,7 @@ tasks.jar {
 }
 
 tasks.shadowJar {
+    relocate("org.slf4j", "me.minecraftauth.lib.libraries.slf4j")
     relocate("io.ktor", "me.minecraftauth.lib.libraries.ktor")
     relocate("kotlinx", "me.minecraftauth.lib.libraries.kotlinx")
     relocate("org.bouncycastle", "me.minecraftauth.lib.libraries.bouncycastle")

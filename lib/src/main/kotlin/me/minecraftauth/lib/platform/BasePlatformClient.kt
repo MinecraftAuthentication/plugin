@@ -26,6 +26,16 @@ open class BasePlatformClient(
         val nonce = Base64.getEncoder().encodeToString(
             (UUID.randomUUID().toString() + System.nanoTime() + (0..1000).random()
         ).toByteArray())
+        val sig = getSignature(method, url, nonce)
+        val appId = config.appId.toString()
+        if (config.debug) {
+            println("[$fromPlatform:$fromUserId] Making request: $method $url")
+            println("[$fromPlatform:$fromUserId] X-Signature: $sig")
+            println("[$fromPlatform:$fromUserId] X-Application-ID: $appId")
+            println("[$fromPlatform:$fromUserId] X-Nonce: $nonce")
+        } else {
+            println("[$fromPlatform:$fromUserId] Making request: $method $url")
+        }
         return me.minecraftauth.lib.util.request(
             method,
             "${config.apiHost}/${config.apiVersion}/$url",

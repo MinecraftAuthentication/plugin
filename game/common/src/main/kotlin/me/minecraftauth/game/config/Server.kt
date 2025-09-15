@@ -59,12 +59,17 @@ class Server(private val config: Section, private val server: String, private va
         var first = true
         val exprs = getExpressions(uuid)
         exprs.forEach { it ->
-            if (it.eval().compareTo(BigDecimal.ONE) == 0) {
-                it.incrementSuccessCount()
-                if (!first) exprs.sortedBy { expr -> -expr.success }
-                return GatekeeperResult(GatekeeperResult.Type.ALLOWED)
+            try {
+                if (it.eval().compareTo(BigDecimal.ONE) == 0) {
+                    it.incrementSuccessCount()
+                    if (!first) exprs.sortedBy { expr -> -expr.success }
+                    return GatekeeperResult(GatekeeperResult.Type.ALLOWED)
+                }
+                first = false
+            } catch (e: Exception) {
+                // failed, ignore
+                first = false
             }
-            first = false
         }
         return GatekeeperResult(GatekeeperResult.Type.DENIED, kick)
     }
